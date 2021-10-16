@@ -18,18 +18,25 @@ internal static class Structures
     // direction == true ->
     internal static void AddLinear(this SvgFragment svg, string s, bool direction, PointF point, StarGlyphOptions options)
     {
+        float d = (direction ? 1 : -1);
+
+        SvgFragment fragment = new()
+        {
+            X = point.X,
+            Y = point.Y
+        };
+
         if (options.horizontalLines)
-            svg.Children.Add(new SvgLine()
+            fragment.Children.Add(new SvgLine()
             {
-                StartX = point.X - 0.5f,
-                StartY = point.Y,
-                EndX = point.X - 0.5f + s.Length,
-                EndY = point.Y,
+                EndX = point.X + s.Length * d,
             });
 
         for (int i=0;i<s.Length;i++)
         {
-            svg.AddCharacter(s[i], point + (direction ? 1 : -1) * new Size(i,0),options);
+            fragment.AddCharacter(s[i], new PointF((i + 0.5f) * d, 0),options);
         }
+
+        svg.Children.Add(fragment);
     }
 }

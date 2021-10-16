@@ -6,13 +6,14 @@
 /// nuget pkg
 
 using Svg;
+using Svg.Transforms;
 using StarGlyph.Generators;
 using System.Drawing;
 using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree);
+public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree, float scale=100);
 
 public enum StarGlyphLayout
 {
@@ -21,7 +22,7 @@ public enum StarGlyphLayout
     Linear
 }
 
-public class StarGlyph
+public class StarGlyphGenerator
 {
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
@@ -35,11 +36,11 @@ public class StarGlyph
     };
 
     StarGlyphOptions options;
-    public StarGlyph()
+    public StarGlyphGenerator()
     {
         options = new();
     }
-    public StarGlyph(StarGlyphOptions settings)
+    public StarGlyphGenerator(StarGlyphOptions settings)
     {
         this.options = settings;
         if (settings.defaultLayout == StarGlyphLayout.Default)
@@ -47,7 +48,14 @@ public class StarGlyph
     }
 
     public SvgDocument CharToSVG(char c)
-        => throw new NotImplementedException();
+    {
+        SvgDocument document = new();
+        document.Transforms = new() { new SvgScale(options.scale, options.scale) };
+
+        document.AddLinear(c.ToString(),true,new PointF(0,0),options);
+
+        return document;
+    }
 
     public SvgDocument StringToSVG(string s, StarGlyphLayout layout = StarGlyphLayout.Default)
     {
@@ -57,6 +65,7 @@ public class StarGlyph
         s = s.ToLower();
 
         SvgDocument document = new();
+        document.Transforms = new() { new SvgScale(options.scale, options.scale) };
 
         if (layout == StarGlyphLayout.Tree)
             document.AddTree(s, new PointF(0, 0), options);
@@ -69,7 +78,10 @@ public class StarGlyph
     public SvgDocument TestSVG()
     {
         SvgDocument document = new();
+        document.Transforms= new() { new SvgScale(options.scale, options.scale) };
+        
         document.AddLinear(ValidChars.Aggregate(new StringBuilder(), (sb,x)=> sb.Append(x)).ToString(),true,new PointF(0,0),options);
+
         return document;
     }
 }

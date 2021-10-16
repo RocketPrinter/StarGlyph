@@ -6,198 +6,204 @@ internal static class Characters
 {
     internal static void AddCharacter(this SvgFragment svg, char c, PointF point, StarGlyphOptions options)
     {
+        SvgFragment fragment = new()
+        {
+            X =  point.X,
+            Y =  point.Y
+        };
+
         switch (char.ToLower(c))
         {
             #region vowels
             case 'a':
-                svg.AddV(point);
+                fragment.AddV();
                 break;
             case 'ă':
-                svg.AddV(point);
-                svg.AddBottomBar(point);
+                fragment.AddV();
+                fragment.AddBottomBar( );
                 break;
             case 'â':
-                svg.AddV(point);
-                svg.AddTopBar(point);
+                fragment.AddV( );
+                fragment.AddTopBar( );
                 break;
 
             case 'e':
-                svg.AddFork(point);
+                fragment.AddFork( );
                 break;
 
             case 'i':
                 if (options.horizontalLines == false)
-                    svg.AddHarden(point, false);
+                    fragment.AddHarden(false);
                 break;
             case 'î':
                 if (options.horizontalLines == false)
-                    svg.AddHarden(point, false);
-                svg.AddTopBar(point);
+                    fragment.AddHarden(false);
+                fragment.AddTopBar( );
                 break;
 
             case 'o':
-                svg.AddDiamond(point);
+                fragment.AddDiamond( );
                 break;
             case 'u':
-                svg.AddTopO(point);
+                fragment.AddTopO( );
                 break;
             #endregion
 
             #region consonants
             case 'b':
-                svg.AddTopLollipop(point);
-                svg.AddBottomLollipop(point);
+                fragment.AddTopLollipop( );
+                fragment.AddBottomLollipop( );
                 break;
             case 'f':
-                svg.AddTopLollipop(point);
-                svg.AddHarden(point, options.horizontalLines);
+                fragment.AddTopLollipop( );
+                fragment.AddHarden(options.horizontalLines);
                 break;
             case 'p':
-                svg.AddTopLollipop(point);
+                fragment.AddTopLollipop( );
                 break;
             case 'r':
-                svg.AddTopLollipop(point);
-                svg.AddAddition(point);
+                fragment.AddTopLollipop( );
+                fragment.AddAddition( );
                 break;
             case 'g':
-                svg.AddBottomLollipop(point);
+                fragment.AddBottomLollipop( );
                 break;
 
             case 'c':
-                svg.AddDiamond(point);
-                svg.AddSubstraction(point);
+                fragment.AddDiamond( );
+                fragment.AddSubstraction( );
                 break;
             case 'd':
-                svg.AddDiamond(point);
-                svg.AddHarden(point, options.horizontalLines);
+                fragment.AddDiamond( );
+                fragment.AddHarden(options.horizontalLines);
                 break;
             case 'q':
-                svg.AddDiamond(point);
-                svg.AddAddition(point);
+                fragment.AddDiamond( );
+                fragment.AddAddition( );
                 break;
             case 'h':
-                svg.AddDiamond(point);
-                svg.AddSubstraction(point,1);
+                fragment.AddDiamond( );
+                fragment.AddSubstraction(1);
                 break;
 
             case 'j':
-                svg.AddI(point);
+                fragment.AddI( );
                 break;
             case 'l':
-                svg.AddI(point);
-                svg.AddHarden(point, options.horizontalLines);
+                fragment.AddI( );
+                fragment.AddHarden(options.horizontalLines);
                 break;
             case 't':
-                svg.AddDoubleI(point);
+                fragment.AddDoubleI( );
                 break;
             case 'ț':
-                svg.AddDoubleI(point);
-                svg.AddBottomBar(point);
+                fragment.AddDoubleI( );
+                fragment.AddBottomBar( );
                 break;
 
             case 'm':
-                svg.AddDoubleSlash(point);
+                fragment.AddDoubleSlash( );
                 break;
             case 'n':
-                svg.AddDoubleSlash(point);
-                svg.AddSubstraction(point);
+                fragment.AddDoubleSlash( );
+                fragment.AddSubstraction( );
                 break;
             case 's':
-                svg.AddSlash(point);
+                fragment.AddSlash( );
                 break;
             case 'ș':
-                svg.AddSlash(point);
-                svg.AddBottomBar(point);
+                fragment.AddSlash( );
+                fragment.AddBottomBar( );
                 break;
             case 'x':
-                svg.AddSlash(point);
-                svg.AddHarden(point, options.horizontalLines);
-                svg.AddSubstraction(point,1);
+                fragment.AddSlash( );
+                fragment.AddHarden(options.horizontalLines);
+                fragment.AddSubstraction(1);
                 break;
             case 'y':
-                svg.AddSlash(point);
-                svg.AddHarden(point, options.horizontalLines);
-                svg.AddSubstraction(point, 0);
+                fragment.AddSlash( );
+                fragment.AddHarden(options.horizontalLines);
+                fragment.AddSubstraction(0);
                 break;
             case 'z':
-                svg.AddSlash(point);
-                svg.AddHarden(point, options.horizontalLines);
+                fragment.AddSlash( );
+                fragment.AddHarden(options.horizontalLines);
                 break;
 
             case 'v':
-                svg.AddBottomO(point);
+                fragment.AddBottomO( );
                 break;
             case 'w':
-                svg.AddTopO(point);
-                svg.AddBottomO(point);
+                fragment.AddTopO( );
+                fragment.AddBottomO( );
                 break;
             case 'k':
-                svg.AddBottomO(point);
-                svg.AddI(point);
+                fragment.AddBottomO( );
+                fragment.AddI( );
                 break;
             #endregion
 
             #region numbers
             case '0':
-                svg.AddDiamond(point);
-                svg.AddAddition(point);
-                svg.AddSubstraction(point);
+                fragment.AddDiamond( );
+                fragment.AddAddition( );
+                fragment.AddSubstraction( );
                 break;
             case '1':
-                svg.AddSubstraction(point, 3);
+                fragment.AddSubstraction(3);
                 break;
             case '2':
-                svg.AddSubstraction(point, 2);
+                fragment.AddSubstraction(2);
                 break;
             case '3':
-                svg.AddSubstraction(point, 1);
+                fragment.AddSubstraction(1);
                 break;
             case '4':
-                svg.AddSubstraction(point, 0);
+                fragment.AddSubstraction(0);
                 break;
             case '5':
-                svg.AddAddition(point);
-                svg.AddSubstraction(point);
+                fragment.AddAddition( );
+                fragment.AddSubstraction( );
                 break;
             case '6':
-                svg.AddAddition(point, 0);
+                fragment.AddAddition(0);
                 break;
             case '7':
-                svg.AddAddition(point, 1);
+                fragment.AddAddition(1);
                 break;
             case '8':
-                svg.AddAddition(point, 2);
+                fragment.AddAddition(2);
                 break;
             case '9':
-                svg.AddAddition(point, 3);
+                fragment.AddAddition(3);
                 break;
             #endregion
 
             #region special
             case ' ':
-                svg.AddS(point);
+                fragment.AddS( );
                 break;
 
             case '+':
-                svg.AddS(point);
-                svg.AddAddition(point);
+                fragment.AddS( );
+                fragment.AddAddition( );
                 break;
             case '-':
-                svg.AddS(point);
-                svg.AddSubstraction(point);
+                fragment.AddS( );
+                fragment.AddSubstraction( );
                 break;
             case '*':
-                svg.AddS(point);
-                svg.AddAddition(point, 1);//todo: not happy with this one
+                fragment.AddS( );
+                fragment.AddAddition(1);//todo: not happy with this one
                 break;
             case '/':
-                svg.AddS(point);
-                svg.AddSubstraction(point,1)//todo: not happy with this one
+                fragment.AddS( );
+                fragment.AddSubstraction(1);//todo: not happy with this one
                 break;
             case '=':
-                svg.AddS(point);
-                svg.AddAddition(point);
-                svg.AddSubstraction(point);
+                fragment.AddS( );
+                fragment.AddAddition( );
+                fragment.AddSubstraction( );
                 break;
 
             #endregion
@@ -205,5 +211,7 @@ internal static class Characters
             default:
                 throw new ArgumentNullException($"Invalid character '{c}' found.");
         }
+
+        svg.Children.Add(fragment);
     }
 }
