@@ -5,21 +5,24 @@
 /// make repo public
 /// nuget pkg
 
+using Svg;
 using StarGlyph.Generators;
+using System.Drawing;
+using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(bool horizontalLines = false, Layout defaultLayout = Layout.Phrase);
+public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree);
+
+public enum StarGlyphLayout
+{
+    Default,
+    Tree, 
+    Linear
+}
 
 public class StarGlyph
 {
-    public enum Layout
-    {
-        Default,
-        Phrase, 
-        Equation
-    }
-
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
     /// </summary>
@@ -31,25 +34,42 @@ public class StarGlyph
         ' ','+','-','*','/','='
     };
 
-    StarGlyphOptions settings;
+    StarGlyphOptions options;
     public StarGlyph()
     {
-        settings = new();
+        options = new();
     }
     public StarGlyph(StarGlyphOptions settings)
     {
-        this.settings = settings;
-        if (settings.defaultLayout == Layout.Default)
+        this.options = settings;
+        if (settings.defaultLayout == StarGlyphLayout.Default)
             throw new ArgumentException("defaultLayout shouldn't be Default");
     }
 
-    public string CharToSVG(char c)
+    public SvgDocument CharToSVG(char c)
         => throw new NotImplementedException();
 
-    public string StringToSVG(string s, Layout layout = Layout.Default)
+    public SvgDocument StringToSVG(string s, StarGlyphLayout layout = StarGlyphLayout.Default)
     {
-        if (layout == Layout.Default)
-            layout = settings.defaultLayout;
-        throw new NotImplementedException();
+        if (layout == StarGlyphLayout.Default)
+            layout = options.defaultLayout;
+
+        s = s.ToLower();
+
+        SvgDocument document = new();
+
+        if (layout == StarGlyphLayout.Tree)
+            document.AddTree(s, new PointF(0, 0), options);
+        else
+            document.AddLinear(s, true, new PointF(0,0), options);
+
+        return document;
+    }
+
+    public SvgDocument TestSVG()
+    {
+        SvgDocument document = new();
+        document.AddLinear(ValidChars.Aggregate(new StringBuilder(), (sb,x)=> sb.Append(x)).ToString(),true,new PointF(0,0),options);
+        return document;
     }
 }
