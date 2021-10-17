@@ -22,8 +22,10 @@ public enum StarGlyphLayout
     Linear
 }
 
-public class StarGlyphGenerator
+public static class StarGlyphGenerator
 {
+    internal static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
+
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
     /// </summary>
@@ -35,20 +37,10 @@ public class StarGlyphGenerator
         ' ','+','-','*','/','='
     };
 
-    StarGlyphOptions options;
-    public StarGlyphGenerator()
+    public static SvgDocument CharToSVG(char c, StarGlyphOptions? options=null)
     {
-        options = new();
-    }
-    public StarGlyphGenerator(StarGlyphOptions settings)
-    {
-        this.options = settings;
-        if (settings.defaultLayout == StarGlyphLayout.Default)
-            throw new ArgumentException("defaultLayout shouldn't be Default");
-    }
+        options ??= defaultOptions;
 
-    public SvgDocument CharToSVG(char c)
-    {
         SvgDocument document = new();
         document.Transforms = new() { new SvgScale(options.scale, options.scale) };
 
@@ -57,8 +49,10 @@ public class StarGlyphGenerator
         return document;
     }
 
-    public SvgDocument StringToSVG(string s, StarGlyphLayout layout = StarGlyphLayout.Default)
+    public static SvgDocument StringToSVG(string s, StarGlyphLayout layout = StarGlyphLayout.Default, StarGlyphOptions? options=null)
     {
+        options??= defaultOptions;
+
         if (layout == StarGlyphLayout.Default)
             layout = options.defaultLayout;
 
@@ -75,8 +69,10 @@ public class StarGlyphGenerator
         return document;
     }
 
-    public SvgDocument TestSVG()
+    public static SvgDocument TestSVG(StarGlyphOptions? options = null)
     {
+        options ??= defaultOptions;
+
         SvgDocument document = new();
         document.Transforms= new() { new SvgScale(options.scale, options.scale) };
         

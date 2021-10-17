@@ -115,19 +115,53 @@ internal static class Components
 
     internal static void AddHarden(this SvgFragment svg, bool horizontalLine)
     {
-
+        if (horizontalLine)
+            throw new NotImplementedException();
+        else
+            svg.Children.Add(new SvgLine()
+            {
+                StartX = -0.5f,
+                EndX = 0.5f
+            });
     }
 
     // level: 0->3
     internal static void AddAddition(this SvgFragment svg, int level = 0)
     {
+        svg.Children.Add(new SvgPolygon()
+        {
+            Points = new SvgPointCollection() { 0.2f, 1f, 0.5f, 1f, 0.5f, 0.7f }
+        });
 
+        if (level != 0)
+            svg.Children.Add(new SvgPolygon() { Points = level switch 
+            {
+                1 => new SvgPointCollection() { 0.5f, 1f, 0f, 0.5f },
+                2 => new SvgPointCollection() { 0.5f, 1f, 0f, 0.5f, 0f, -0.5f },
+                3 => new SvgPointCollection() { 0.5f, 1f, 0f, 0.5f, 0f, -0.5f, -0.5f, -1f},
+                _ => throw new ArgumentException("level is not in the correct range")
+            } });
     }
 
     // level: 0->3
     internal static void AddSubstraction(this SvgFragment svg, int level = 0)
     {
+        svg.Children.Add(new SvgPolygon()
+        {
+            Points = new SvgPointCollection() { -0.2f, -1f, -0.5f, -1f, -0.5f, -0.7f }
+        });
 
+        if (level != 0)
+            svg.Children.Add(new SvgPolygon()
+            {
+                Points = level switch
+                {
+                    1 => new SvgPointCollection() { -0.5f, -1f, 0f, -0.5f },
+                    2 => new SvgPointCollection() { -0.5f, -1f, 0f, -0.5f, 0f, 0.5f },
+                    3 => new SvgPointCollection() { -0.5f, -1f, 0f, -0.5f, 0f, 0.5f, 0.5f, 1f },
+                    _ => throw new ArgumentException("level is not in the correct range")
+                }
+            });
     }
     #endregion
 }
