@@ -4,68 +4,71 @@
 /// GUI tool (in Blazor)
 /// make repo public
 /// nuget pkg
+/// switch to SvgPoint or Vector2 from System.Numberics
 
-using Svg;
-using Svg.Transforms;
+global using Svg;
+global using System.Drawing;
+
 using StarGlyph.Generators;
-using System.Drawing;
 using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree, float scale=10);
+public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree, bool attributeAnnotations = true);
 
 public enum StarGlyphLayout
 {
     Default,
-    Tree, 
+    Tree,
     Linear
 }
 
 public static class StarGlyphGenerator
 {
     internal static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
+    // dumb fix, *every* coordinate must be over 0
+    internal static readonly PointF rootPos = new PointF(10_000f, 10_100f);
 
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
     /// </summary>
     public static readonly IReadOnlySet<char> ValidChars = new HashSet<char>()
     {
-        'a', 'ă', 'â' , 'e','i', 'î', 'o', 'u', 'v',
+        'a', 'ă', 'â', 'e','i', 'î', 'o', 'u', 'v',
         'b','c','d', 'f', 'g', 'h','j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 'ș', 't', 'ț', 'w', 'x', 'y', 'z',
         '0','1','2','3','4','5','6','7','8','9',
         ' ','+','-','*','/','='
     };
 
-    public static SvgDocument CharToSVG(char c, StarGlyphOptions? options=null)
+    public static SvgDocument CharToSVG(char c, StarGlyphOptions? options = null)
     {
         options ??= defaultOptions;
 
-        SvgDocument document = new();
-        document.Transforms = new() { new SvgScale(options.scale, options.scale) };
+        SvgDocument document = CreateDocument(options);
 
-        document.AddLinear(c.ToString(),true,new PointF(0,0),options);
+        document.AddLine(c.ToString(), true, new PointF(0, 0), options);
 
+        document.FinalizeDocument();
         return document;
     }
 
-    public static SvgDocument StringToSVG(string s, StarGlyphLayout layout = StarGlyphLayout.Default, StarGlyphOptions? options=null)
+    public static SvgDocument StringToSVG(string s, StarGlyphLayout layout = StarGlyphLayout.Default, StarGlyphOptions? options = null)
     {
-        options??= defaultOptions;
+        options ??= defaultOptions;
 
         if (layout == StarGlyphLayout.Default)
             layout = options.defaultLayout;
 
         s = s.ToLower();
 
-        SvgDocument document = new();
-        document.Transforms = new() { new SvgScale(options.scale, options.scale) };
+        SvgDocument document = CreateDocument(options);
 
         if (layout == StarGlyphLayout.Tree)
-            document.AddTree(s, new PointF(0, 0), options);
+            document.AddTree(s, rootPos, options);
         else
-            document.AddLinear(s, true, new PointF(0,0), options);
+            document.AddLine(s, true, rootPos, options);
 
+        document.FinalizeDocument();
         return document;
     }
 
@@ -73,11 +76,25 @@ public static class StarGlyphGenerator
     {
         options ??= defaultOptions;
 
-        SvgDocument document = new();
-        document.Transforms= new() { new SvgScale(options.scale, options.scale) };
-        
-        document.AddLinear(ValidChars.Aggregate(new StringBuilder(), (sb,x)=> sb.Append(x)).ToString(),true,new PointF(0,0),options);
+        var document = CreateDocument(options);
 
+        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, rootPos, options);
+
+        document.FinalizeDocument();
         return document;
+    }
+
+    private static SvgDocument CreateDocument(StarGlyphOptions options)
+    {
+        SvgDocument document = new();
+        if (options.attributeAnnotations)
+            document.CustomAttributes.Add("about", "Made with: https://github.com/RocketPrinter/StarGlyph");
+        return document;
+    }
+
+    private static void FinalizeDocument(this SvgDocument document)
+    {
+        // dumb fix, *every* coordinate must be over 0
+        document.ViewBox = new(document.Bounds.Left, document.Bounds.Top, document.Bounds.Width, document.Bounds.Height);
     }
 }
