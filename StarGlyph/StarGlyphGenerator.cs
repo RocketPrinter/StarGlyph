@@ -27,7 +27,7 @@ public static class StarGlyphGenerator
 {
     internal static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
     // dumb fix, *every* coordinate must be over 0
-    internal static readonly PointF rootPos = new PointF(10_000f, 10_100f);
+    internal static readonly PointF rootPos = new PointF(100f, 100f);
 
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.

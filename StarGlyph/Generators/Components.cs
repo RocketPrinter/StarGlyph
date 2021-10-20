@@ -56,7 +56,7 @@ internal static class Components
     internal static void AddDoubleSlash(this SvgFragment svg, PointF point) =>
         svg.Children.Add(new SvgPolygon()
         {
-            Points = new SvgPointCollection() { -0.5f, -1f, 0.5f, 0, 0.5f, 1 }.AddPoint(point)
+            Points = new SvgPointCollection() { -0.5f, -1f, 0.5f, 0, 0.5f, 1f }.AddPoint(point)
         });
 
     internal static void AddTopO(this SvgFragment svg, PointF point) =>
@@ -148,7 +148,7 @@ internal static class Components
     {
         svg.Children.Add(new SvgPolygon()
         {
-            Points = new SvgPointCollection() { -0.2f, -1f, -0.5f, -1f, -0.5f, -0.7f }
+            Points = new SvgPointCollection() { -0.2f, -1f, -0.5f, -1f, -0.5f, -0.7f }.AddPoint(point)
         });
 
         if (level != 0)

@@ -4,11 +4,7 @@ internal static class Characters
 {
     internal static void AddCharacter(this SvgFragment svg, char c, PointF point, StarGlyphOptions options)
     {
-        SvgFragment fragment = new()
-        {
-            X =  point.X,
-            Y =  point.Y
-        };
+        SvgFragment fragment = new();
         if (options.attributeAnnotations)
             fragment.CustomAttributes.Add("letter",c.ToString());
 
@@ -212,6 +208,7 @@ internal static class Characters
                 throw new ArgumentNullException($"Invalid character '{c}' found.");
         }
 
+        Console.WriteLine($"{c.ToString()}   {fragment.Bounds.Height}");
         svg.Children.Add(fragment);
     }
 }
