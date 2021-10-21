@@ -27,15 +27,15 @@ public static class StarGlyphGenerator
 {
     internal static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
     // dumb fix, *every* coordinate must be over 0
-    internal static readonly PointF rootPos = new PointF(100f, 100f);
+    internal static readonly PointF rootPos = new PointF(10_000-9000f, 10_000-9000f);
 
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
     /// </summary>
     public static readonly IReadOnlySet<char> ValidChars = new HashSet<char>()
     {
-        'a', 'ă', 'â', 'e','i', 'î', 'o', 'u', 'v',
-        'b','c','d', 'f', 'g', 'h','j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 'ș', 't', 'ț', 'w', 'x', 'y', 'z',
+        'a', 'ă', 'â', 'e','i', 'î', 'o', 'u',
+        'b','c','d', 'f', 'g', 'h','j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 'ș', 't', 'ț', 'v','w', 'x', 'y', 'z',
         '0','1','2','3','4','5','6','7','8','9',
         ' ','+','-','*','/','='
     };
@@ -79,6 +79,8 @@ public static class StarGlyphGenerator
         var document = CreateDocument(options);
 
         document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, rootPos, options);
+        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, new PointF(rootPos.X,rootPos.Y + 200), options with { horizontalLines=true});
+
 
         document.FinalizeDocument();
         return document;
@@ -86,7 +88,14 @@ public static class StarGlyphGenerator
 
     private static SvgDocument CreateDocument(StarGlyphOptions options)
     {
-        SvgDocument document = new();
+        SvgDocument document = new()
+        {
+            Width = new SvgUnit(SvgUnitType.Percentage,100),
+            Height = new SvgUnit(SvgUnitType.Percentage,100),
+            Fill = SvgPaintServer.None,
+            Stroke = new SvgColourServer(Color.Black),
+            StrokeWidth = 5f
+        };
         if (options.attributeAnnotations)
             document.CustomAttributes.Add("about", "Made with: https://github.com/RocketPrinter/StarGlyph");
         return document;
@@ -95,6 +104,7 @@ public static class StarGlyphGenerator
     private static void FinalizeDocument(this SvgDocument document)
     {
         // dumb fix, *every* coordinate must be over 0
-        document.ViewBox = new(document.Bounds.Left, document.Bounds.Top, document.Bounds.Width, document.Bounds.Height);
+        document.ViewBox = new(0, 0, document.Bounds.Width*2, document.Bounds.Height+2000);
+        //document.ViewBox = new(document.Bounds.Left, document.Bounds.Top, document.Bounds.Width, document.Bounds.Height);
     }
 }

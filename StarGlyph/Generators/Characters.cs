@@ -208,7 +208,7 @@ internal static class Characters
                 throw new ArgumentNullException($"Invalid character '{c}' found.");
         }
 
-        Console.WriteLine($"{c.ToString()}   {fragment.Bounds.Height}");
         svg.Children.Add(fragment);
+        //Console.WriteLine($"{c}   {fragment.Bounds.Height}");
     }
 }

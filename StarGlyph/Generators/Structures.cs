@@ -6,7 +6,7 @@ internal static class Structures
     {
         svg.Children.Add(new SvgPolygon()
         {
-            Points = new SvgPointCollection() { -1, 0, 1, 0, 0, 1 }.AddPoint(point)
+            Points = new SvgPointCollection() { -100, 000, 100, 0, 0, 100 }.AddPoint(point)
         });
     }
 
@@ -23,14 +23,14 @@ internal static class Structures
         if (options.horizontalLines)
             fragment.Children.Add(new SvgLine()
             {
-                EndX = s.Length * d,
+                EndX = s.Length * 100 * d,
             }
             .AddPoint(point)
             );
 
         for (int i=0;i<s.Length;i++)
         {
-            fragment.AddCharacter(s[i], new PointF((i + 0.5f) * d + point.X, point.Y),options);
+            fragment.AddCharacter(s[i], new PointF((i * 100 + 50) * d + point.X, point.Y),options);
         }
 
         svg.Children.Add(fragment);
