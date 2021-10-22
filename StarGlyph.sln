@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarGlyph", "StarGlyph\StarGlyph.csproj", "{C1BAE1A1-38CC-41C8-A20E-EB8AC4D33D3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "aedrgfhrftgdssdfghhsdfgsdfghasedthrtjwryjrdsdsfg\TestProject.csproj", "{FB22F406-B1AF-43C6-9C42-7E014DF72331}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "TestProject\TestProject.csproj", "{FB22F406-B1AF-43C6-9C42-7E014DF72331}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

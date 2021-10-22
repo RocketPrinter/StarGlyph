@@ -6,46 +6,64 @@ internal static class Structures
 {
     internal static void AddTree(this SvgFragment svg, string s, PointF point, StarGlyphOptions options)
     {
-        // parsing string into lines
-        // todo: "abc?def" won't get split
-        string[] tokens = s.Split(" ", StringSplitOptions.TrimEntries & StringSplitOptions.RemoveEmptyEntries);
-
-        // forming tree lines
-        int i = 0;
-        int wordsPerLine = 0;
-        List<string> lines = new() { "" };
-        foreach (var token in tokens)
+        int h=0;
+        foreach (string sentence in s.Split(StarGlyphGenerator.sentenceSeparators, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
         {
-            if (lines[i].Length == 0 || (wordsPerLine < options.maxWordsPerLine && token.Length + lines[i].Length <= options.maxLineLength))
-            {
-                if (lines[i].Length > 0)
-                    lines[i] += ' ';
-                wordsPerLine++;
-                lines[i] += token;
-            }
+            // separators
+            if (h == 0)
+                svg.Children.Add(new SvgPolygon()
+                {
+                    Points = new SvgPointCollection() { -100, 0, 0, -100, 100, 0 }.AddPoint(point)
+                });
             else
-            {
-                lines.Add(token);
-                i++;
-                wordsPerLine = 1;
-            }
+                svg.Children.Add(new SvgPolygon()
+                {
+                    Points = new SvgPointCollection() {0,0, -100, -50, 0, -100, 100, -50 }.AddPoint(new PointF(point.X,point.Y - h*100))
+                });
+            h++;
+
+            h += AddSentence(sentence,h);
         }
 
-        if (lines[i] == "")
-            lines.RemoveAt(i);
-
-        svg.Children.Add(new SvgPolygon()
-        {
-            Points = new SvgPointCollection() { -100, 0, 0, -100, 100, 0 }.AddPoint(point)
-        });
         svg.Children.Add(new SvgLine()
         {
             StartY = -100,
-            EndY = -100 - lines.Count / 2 * 200
+            EndY = - h * 100
         }.AddPoint(point));
 
-        for (i=0;i<lines.Count;i++)
-            svg.AddLine(lines[i], (i + 3) % 4 <= 1, new PointF(point.X, -200 * (1 + i/2) + point.Y),options);
+        // returns the height of the sentence
+        int AddSentence(string sentence, int hOffset)
+        {
+            // parsing string into lines
+            // todo: "abc?def" won't get split
+            string[] tokens = sentence.Split(" ", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+            // forming branches
+            int i = 0;
+            int wordsPerLine = 0;
+            List<string> branches = new() { "" };
+            foreach (var token in tokens)
+            {
+                if (branches[i].Length == 0 || (wordsPerLine < options.maxWordsPerLine && token.Length + branches[i].Length <= options.maxLineLength))
+                {
+                    if (branches[i].Length > 0)
+                        branches[i] += ' ';
+                    wordsPerLine++;
+                    branches[i] += token;
+                }
+                else
+                {
+                    branches.Add(token);
+                    i++;
+                    wordsPerLine = 1;
+                }
+            }
+
+            for (i=0;i< branches.Count;i++)
+                svg.AddLine(branches[i], (i + 3) % 4 <= 1, new PointF(point.X, - 100 - 200 * (i/2) - 100 * hOffset + point.Y),options);
+
+            return (branches.Count-1)/2*2 + 2;
+        }
     }
 
     // direction == false <-

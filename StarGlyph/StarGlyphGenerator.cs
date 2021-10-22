@@ -14,7 +14,7 @@ using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree, bool attributeAnnotations = true, int maxLineLength = 10, int maxWordsPerLine=2, bool throwOnInvalidChars = true);
+public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine=2, bool throwOnInvalidChars = true);
 
 public enum StarGlyphLayout
 {
@@ -27,7 +27,7 @@ public static class StarGlyphGenerator
 {
     public static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
     // dumb fix, *every* coordinate must be over 0
-    internal static readonly PointF rootPos = new PointF(10_000-9000f, 10_000-9000f);
+    internal static readonly PointF rootPos = new PointF(1000f, 1500f);
 
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
@@ -39,6 +39,7 @@ public static class StarGlyphGenerator
         '0','1','2','3','4','5','6','7','8','9',
         ' ','+','-','*','/','='
     };
+    public static readonly char[] sentenceSeparators = new[] {'.', '?', '!'};
 
     public static SvgDocument CharToSVG(char c, StarGlyphOptions? options = null)
     {
@@ -46,7 +47,7 @@ public static class StarGlyphGenerator
 
         SvgDocument document = CreateDocument(options);
 
-        document.AddLine(c.ToString(), true, new PointF(0, 0), options);
+        document.AddLine(c.ToString(), true, rootPos, options);
 
         document.FinalizeDocument();
         return document;
