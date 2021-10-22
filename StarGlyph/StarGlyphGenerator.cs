@@ -14,7 +14,7 @@ using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree, bool attributeAnnotations = true);
+public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree, bool attributeAnnotations = true, int maxLineLength = 10, int maxWordsPerLine=2, bool throwOnInvalidChars = true);
 
 public enum StarGlyphLayout
 {
@@ -25,7 +25,7 @@ public enum StarGlyphLayout
 
 public static class StarGlyphGenerator
 {
-    internal static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
+    public static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
     // dumb fix, *every* coordinate must be over 0
     internal static readonly PointF rootPos = new PointF(10_000-9000f, 10_000-9000f);
 
@@ -66,7 +66,7 @@ public static class StarGlyphGenerator
         if (layout == StarGlyphLayout.Tree)
             document.AddTree(s, rootPos, options);
         else
-            document.AddLine(s, true, rootPos, options);
+            document.AddLine(s, true, rootPos, options); //todo: not good
 
         document.FinalizeDocument();
         return document;
@@ -86,6 +86,8 @@ public static class StarGlyphGenerator
         return document;
     }
 
+
+
     private static SvgDocument CreateDocument(StarGlyphOptions options)
     {
         SvgDocument document = new()
@@ -104,7 +106,6 @@ public static class StarGlyphGenerator
     private static void FinalizeDocument(this SvgDocument document)
     {
         // dumb fix, *every* coordinate must be over 0
-        document.ViewBox = new(0, 0, document.Bounds.Width*2, document.Bounds.Height+2000);
-        //document.ViewBox = new(document.Bounds.Left, document.Bounds.Top, document.Bounds.Width, document.Bounds.Height);
+        document.ViewBox = new(document.Bounds.X, document.Bounds.Y, document.Bounds.Width*2, document.Bounds.Height+2000);
     }
 }

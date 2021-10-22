@@ -205,7 +205,9 @@ internal static class Characters
             #endregion
 
             default:
-                throw new ArgumentNullException($"Invalid character '{c}' found.");
+                if (options.throwOnInvalidChars)
+                    throw new ArgumentNullException($"Invalid character '{c}' found.");
+                break;
         }
 
         svg.Children.Add(fragment);

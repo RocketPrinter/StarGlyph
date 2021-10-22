@@ -1,4 +1,6 @@
-﻿namespace StarGlyph.Generators;
+﻿using Svg.Pathing;
+
+namespace StarGlyph.Generators;
 
 internal static class Components
 {
@@ -15,10 +17,14 @@ internal static class Components
             Points = new SvgPointCollection() { 0, -50, -30, 0, 0, 50, 30, 0 }.AddPoint(point)
         });
 
-    internal static void AddS(this SvgFragment svg, PointF point)
-    {
-
-    }
+    internal static void AddS(this SvgFragment svg, PointF point) =>
+        svg.Children.Add( new SvgPath()
+        {
+            PathData = new SvgPathSegmentList()
+            {
+                
+            }
+        });
 
     internal static void AddI(this SvgFragment svg, PointF point) =>
         svg.Children.Add(new SvgLine()
