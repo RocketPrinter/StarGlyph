@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="Svg" Version="3.3.0" />
+    <None Update="lorem_ipsum.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
 	    <None Update="test.svg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -14,12 +14,13 @@ using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(bool horizontalLines = false, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine=2, bool throwOnInvalidChars = true);
+public record class StarGlyphOptions(PointF? offsetOverride = null, bool horizontalLines = false, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine=2, bool throwOnInvalidChars = true);
 
 public static class StarGlyphGenerator
 {
     public static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
-    internal static readonly PointF rootPos = new PointF(1000, 1500);
+    // needed because of svg qurikyness I don't understand
+    public static readonly PointF defaultOffset = new PointF(1000, 5000);
 
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
@@ -39,7 +40,7 @@ public static class StarGlyphGenerator
 
         SvgDocument document = CreateDocument(options);
 
-        document.AddLine(c.ToString(), true, rootPos, options);
+        document.AddLine(c.ToString(), true, options.offsetOverride ?? defaultOffset, options);
 
         document.FinalizeDocument();
         return document;
@@ -53,7 +54,7 @@ public static class StarGlyphGenerator
 
         SvgDocument document = CreateDocument(options);
 
-        document.AddTree(s, rootPos, options);
+        document.AddTree(s, options.offsetOverride ?? defaultOffset, options);
 
         document.FinalizeDocument();
         return document;
@@ -65,8 +66,8 @@ public static class StarGlyphGenerator
 
         var document = CreateDocument(options);
 
-        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, rootPos, options);
-        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, new PointF(rootPos.X,rootPos.Y + 200), options with { horizontalLines=true});
+        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, defaultOffset, options);
+        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, new PointF(defaultOffset.X,defaultOffset.Y + 200), options with { horizontalLines=true});
 
 
         document.FinalizeDocument();
@@ -92,6 +93,6 @@ public static class StarGlyphGenerator
 
     private static void FinalizeDocument(this SvgDocument document)
     {
-        document.ViewBox = new(document.Bounds.X, document.Bounds.Y, document.Bounds.Width*2, document.Bounds.Height+2000);
+        document.ViewBox = new(document.Bounds.X, document.Bounds.Y, document.Bounds.Right, document.Bounds.Bottom);
     }
 }
