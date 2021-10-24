@@ -1,4 +1,5 @@
 ﻿using Svg;
+using Svg.Pathing;
 using System.Drawing;
 
 namespace StarGlyph;
@@ -37,5 +38,16 @@ internal static class Extensions
         circle.CenterY += point.Y;
 
         return circle;
+    }
+
+    //for dumb fix
+    internal static SvgCubicCurveSegment AddPoint(this SvgCubicCurveSegment segment, PointF point)
+    {
+        SizeF size = new(point);
+        segment.Start += size;
+        segment.FirstControlPoint += size;
+        segment.SecondControlPoint += size;
+        segment.End += size;
+        return segment;
     }
 }

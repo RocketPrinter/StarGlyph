@@ -34,8 +34,7 @@ internal static class Structures
         // returns the height of the sentence
         int AddSentence(string sentence, int hOffset)
         {
-            // parsing string into lines
-            // todo: "abc?def" won't get split
+            // parsing sentence into branches
             string[] tokens = sentence.Split(" ", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
             // forming branches
@@ -59,9 +58,11 @@ internal static class Structures
                 }
             }
 
+            // drawing branches
             for (i=0;i< branches.Count;i++)
                 svg.AddLine(branches[i], (i + 3) % 4 <= 1, new PointF(point.X, - 100 - 200 * (i/2) - 100 * hOffset + point.Y),options);
 
+            // returning height
             return (branches.Count-1)/2*2 + 2;
         }
     }

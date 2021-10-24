@@ -22,7 +22,9 @@ internal static class Components
         {
             PathData = new SvgPathSegmentList()
             {
-                
+                new SvgMoveToSegment(new PointF(point.X,point.Y-50)),
+                new SvgCubicCurveSegment(new PointF(0,-50),new PointF(-40,-45),new PointF(-40,-15),new PointF(0,0)).AddPoint(point),
+                new SvgCubicCurveSegment(new PointF(0,0),new PointF(40,15),new PointF(40,45),new PointF(0,50)).AddPoint(point)
             }
         });
 

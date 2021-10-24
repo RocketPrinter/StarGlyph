@@ -14,20 +14,12 @@ using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(bool horizontalLines = false, StarGlyphLayout defaultLayout = StarGlyphLayout.Tree, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine=2, bool throwOnInvalidChars = true);
-
-public enum StarGlyphLayout
-{
-    Default,
-    Tree,
-    Linear
-}
+public record class StarGlyphOptions(bool horizontalLines = false, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine=2, bool throwOnInvalidChars = true);
 
 public static class StarGlyphGenerator
 {
     public static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
-    // dumb fix, *every* coordinate must be over 0
-    internal static readonly PointF rootPos = new PointF(1000f, 1500f);
+    internal static readonly PointF rootPos = new PointF(1000, 1500);
 
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
@@ -53,21 +45,15 @@ public static class StarGlyphGenerator
         return document;
     }
 
-    public static SvgDocument StringToSVG(string s, StarGlyphLayout layout = StarGlyphLayout.Default, StarGlyphOptions? options = null)
+    public static SvgDocument StringToSVG(string s, StarGlyphOptions? options = null)
     {
         options ??= defaultOptions;
-
-        if (layout == StarGlyphLayout.Default)
-            layout = options.defaultLayout;
 
         s = s.ToLower();
 
         SvgDocument document = CreateDocument(options);
 
-        if (layout == StarGlyphLayout.Tree)
-            document.AddTree(s, rootPos, options);
-        else
-            document.AddLine(s, true, rootPos, options); //todo: not good
+        document.AddTree(s, rootPos, options);
 
         document.FinalizeDocument();
         return document;
@@ -106,7 +92,6 @@ public static class StarGlyphGenerator
 
     private static void FinalizeDocument(this SvgDocument document)
     {
-        // dumb fix, *every* coordinate must be over 0
         document.ViewBox = new(document.Bounds.X, document.Bounds.Y, document.Bounds.Width*2, document.Bounds.Height+2000);
     }
 }
