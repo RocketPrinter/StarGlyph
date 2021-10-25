@@ -2,17 +2,42 @@
 
 <PageTitle>StarGlyph</PageTitle>
 
-<MudContainer>
+<MudContainer Class="mt-8">
     <MudGrid Spacing=6>
         <MudItem xs=7>
-            <MudPaper Class="d-flex flex-column" Style="height:100%;" Outlined="true">
+            <MudPaper Height=100% Outlined="true">
 
             </MudPaper>
         </MudItem>
 
         <MudItem xs=5>
-            <MudText Typo=Typo.h5 GutterBottom=true>Options</MudText>
+            @*Class="d-flex flex-column" Style="height:100%;"*@
+            <MudPaper Outlined="true">
+                <MudText Typo=Typo.h5 GutterBottom=true>Options</MudText>
+                <MudGrid>
+                    <MudItem xs=12>
+                        <div Class="d-flex flex-row">
+                            <MudText Typo=Typo.h6 Align=Align.Center Class="mx-2">Style:</MudText>
+                            <MudChipSet @bind-SelectedChip=selected Filter="true" Mandatory=true>
+                                <MudChip Color=Color.Primary Default=true>Default</MudChip>
+                                <MudChip Color=Color.Primary>Strikethrough</MudChip>
+                            </MudChipSet>
+                        </div>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
 
         </MudItem>
     </MudGrid>
 </MudContainer>
+
+@code
+{
+    MudChip? selected;
+
+    //bool horizontalLines = false
+
+    //PointF? offsetOverride = null
+    //int maxLineLength = 6
+    //int maxWordsPerLine=2
+}
