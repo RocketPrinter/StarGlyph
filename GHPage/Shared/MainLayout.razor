@@ -1,6 +1,24 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavManager
+
 <MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
-@Body
+<MudLayout>
+    <MudAppBar Elevation=1>
+        <MudText Typo=Typo.h5 Class="ml-3">StarGlyph</MudText>
+        <MudSpacer/>
+        <MudButton Link=@($"https://github.com/{userName}") Target="_blank" Color=Color.Transparent>
+            <MudAvatar Image=@($"https://avatars.githubusercontent.com/u/{userId}")/>
+        </MudButton>
+    </MudAppBar>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code
+{
+    const string userName="RocketPrinter", userId = "35203190";
+}
