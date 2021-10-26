@@ -1,43 +1,79 @@
-﻿@page "/"
+﻿@using StarGlyph
+@using Svg
+
+@page "/"
 
 <PageTitle>StarGlyph</PageTitle>
 
-<MudContainer Class="mt-8">
-    <MudGrid Spacing=6>
-        <MudItem xs=7>
+<div Class="d-flex flex-row my-6 mx-4">
+    <MudGrid Spacing=2>
+        <MudItem Class="flex-grow-1">
             <MudPaper Height=100% Outlined="true">
-
+                svg here
             </MudPaper>
         </MudItem>
-
-        <MudItem xs=5>
-            @*Class="d-flex flex-column" Style="height:100%;"*@
-            <MudPaper Outlined="true">
-                <MudText Typo=Typo.h5 GutterBottom=true>Options</MudText>
-                <MudGrid>
-                    <MudItem xs=12>
+    
+        <MudItem xs=5 Class="d-flex flex-column">
+            @*Options*@
+            <MudExpansionPanels>
+                <MudExpansionPanel Text="Options">
+                    <MudForm  @bind-IsValid=formSucess>
                         <div Class="d-flex flex-row">
-                            <MudText Typo=Typo.h6 Align=Align.Center Class="mx-2">Style:</MudText>
-                            <MudChipSet @bind-SelectedChip=selected Filter="true" Mandatory=true>
-                                <MudChip Color=Color.Primary Default=true>Default</MudChip>
-                                <MudChip Color=Color.Primary>Strikethrough</MudChip>
+                            <MudText Typo=Typo.body1 Class="my-2 mr-2">Style:</MudText>
+                            <MudChipSet @bind-SelectedChip=selectedStyle Filter="true" Mandatory=true>
+                                <MudChip Text="Default" Color=Color.Primary Default=true/>
+                                <MudChip Text="Strikethrough" Color=Color.Primary/>
                             </MudChipSet>
-                        </div>
-                    </MudItem>
-                </MudGrid>
-            </MudPaper>
+                         </div>
 
+                        <MudTextField @bind-Value=maxLineLength Label="Max line length" Immediate=true
+                            Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
+                        <MudTextField @bind-Value=maxWordsPerLine Label="Max words per line" Immediate=true
+                            Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
+    
+                        <MudTextField @bind-Value=offsetX Label="Offset X" Immediate=true
+                            Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Grid3x3/>
+                        <MudTextField @bind-Value=offsetY Label="Offset Y" Immediate=true
+                            Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Grid3x3/>
+                    </MudForm>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
         </MudItem>
     </MudGrid>
-</MudContainer>
+</div>
 
 @code
 {
-    MudChip? selected;
+    SvgDocument document;
+    string input="Replace this with something funny";
 
-    //bool horizontalLines = false
+    MudForm? form;
+    MudChip? selectedStyle;
+    bool formSucess;
+    int maxLineLength = 6;
+    int maxWordsPerLine = 2;
+    float offsetX = StarGlyphGenerator.defaultOffset.X;
+    float offsetY=StarGlyphGenerator.defaultOffset.Y;
 
-    //PointF? offsetOverride = null
-    //int maxLineLength = 6
-    //int maxWordsPerLine=2
+    void UpdateDocument()
+    {
+        document = StarGlyphGenerator.StringToSVG(input, new StarGlyphOptions
+            {
+                horizontalLines = selectedStyle!.Text switch
+                {
+                    "Default" => false,
+                    "Strikethrough" => true,
+                    _ => throw new InvalidDataException()
+                },
+                maxLineLength=maxLineLength,
+                maxWordsPerLine = maxWordsPerLine,
+                offsetOverride = new System.Drawing.PointF(offsetX,offsetY),
+            });
+
+    }
+
+    public Index()
+    {
+        //document = StarGlyphGenerator.StringToSVG(input);
+    }
 }

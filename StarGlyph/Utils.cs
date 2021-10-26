@@ -1,6 +1,4 @@
-﻿using Svg;
-using Svg.Pathing;
-using System.Drawing;
+﻿using Svg.Pathing;
 
 namespace StarGlyph;
 

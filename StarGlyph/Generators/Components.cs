@@ -18,7 +18,7 @@ internal static class Components
         });
 
     internal static void AddS(this SvgFragment svg, PointF point) =>
-        svg.Children.Add( new SvgPath()
+        svg.Children.Add(new SvgPath()
         {
             PathData = new SvgPathSegmentList()
             {

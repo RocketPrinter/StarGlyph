@@ -6,7 +6,7 @@ internal static class Characters
     {
         SvgFragment fragment = new();
         if (options.attributeAnnotations)
-            fragment.CustomAttributes.Add("letter",c.ToString());
+            fragment.CustomAttributes.Add("letter", c.ToString());
 
         switch (char.ToLower(c))
         {

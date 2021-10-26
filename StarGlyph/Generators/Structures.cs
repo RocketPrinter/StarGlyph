@@ -1,12 +1,10 @@
-﻿using System.Text;
-
-namespace StarGlyph.Generators;
+﻿namespace StarGlyph.Generators;
 
 internal static class Structures
 {
     internal static void AddTree(this SvgFragment svg, string s, PointF point, StarGlyphOptions options)
     {
-        int h=0;
+        int h = 0;
         foreach (string sentence in s.Split(StarGlyphGenerator.sentenceSeparators, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
         {
             // separators
@@ -18,17 +16,17 @@ internal static class Structures
             else
                 svg.Children.Add(new SvgPolygon()
                 {
-                    Points = new SvgPointCollection() {0,0, -100, -50, 0, -100, 100, -50 }.AddPoint(new PointF(point.X,point.Y - h*100))
+                    Points = new SvgPointCollection() { 0, 0, -100, -50, 0, -100, 100, -50 }.AddPoint(new PointF(point.X, point.Y - h * 100))
                 });
             h++;
 
-            h += AddSentence(sentence,h);
+            h += AddSentence(sentence, h);
         }
 
         svg.Children.Add(new SvgLine()
         {
             StartY = -100,
-            EndY = - h * 100
+            EndY = -h * 100
         }.AddPoint(point));
 
         // returns the height of the sentence
@@ -59,11 +57,11 @@ internal static class Structures
             }
 
             // drawing branches
-            for (i=0;i< branches.Count;i++)
-                svg.AddLine(branches[i], (i + 3) % 4 <= 1, new PointF(point.X, - 100 - 200 * (i/2) - 100 * hOffset + point.Y),options);
+            for (i = 0; i < branches.Count; i++)
+                svg.AddLine(branches[i], (i + 3) % 4 <= 1, new PointF(point.X, -100 - 200 * (i / 2) - 100 * hOffset + point.Y), options);
 
             // returning height
-            return (branches.Count-1)/2*2 + 2;
+            return (branches.Count - 1) / 2 * 2 + 2;
         }
     }
 
@@ -75,7 +73,7 @@ internal static class Structures
 
         SvgFragment fragment = new();
         if (options.attributeAnnotations)
-            fragment.CustomAttributes.Add("line",s);
+            fragment.CustomAttributes.Add("line", s);
 
         if (options.horizontalLines)
             fragment.Children.Add(new SvgLine()
@@ -85,9 +83,9 @@ internal static class Structures
             .AddPoint(point)
             );
 
-        for (int i=0;i<s.Length;i++)
+        for (int i = 0; i < s.Length; i++)
         {
-            fragment.AddCharacter(s[i], new PointF((i * 100 + 50) * d + point.X, point.Y),options);
+            fragment.AddCharacter(s[i], new PointF((i * 100 + 50) * d + point.X, point.Y), options);
         }
 
         svg.Children.Add(fragment);

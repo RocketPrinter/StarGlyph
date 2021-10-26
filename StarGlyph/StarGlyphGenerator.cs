@@ -14,7 +14,7 @@ using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(PointF? offsetOverride = null, bool horizontalLines = false, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine=2, bool throwOnInvalidChars = true);
+public record class StarGlyphOptions(PointF? offsetOverride = null, bool horizontalLines = false, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine = 2, bool throwOnInvalidChars = true);
 
 public static class StarGlyphGenerator
 {
@@ -32,7 +32,7 @@ public static class StarGlyphGenerator
         '0','1','2','3','4','5','6','7','8','9',
         ' ','+','-','*','/','='
     };
-    public static readonly char[] sentenceSeparators = new[] {'.', '?', '!'};
+    public static readonly char[] sentenceSeparators = new[] { '.', '?', '!' };
 
     public static SvgDocument CharToSVG(char c, StarGlyphOptions? options = null)
     {
@@ -67,7 +67,7 @@ public static class StarGlyphGenerator
         var document = CreateDocument(options);
 
         document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, defaultOffset, options);
-        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, new PointF(defaultOffset.X,defaultOffset.Y + 200), options with { horizontalLines=true});
+        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, new PointF(defaultOffset.X, defaultOffset.Y + 200), options with { horizontalLines = true });
 
 
         document.FinalizeDocument();
@@ -80,8 +80,8 @@ public static class StarGlyphGenerator
     {
         SvgDocument document = new()
         {
-            Width = new SvgUnit(SvgUnitType.Percentage,100),
-            Height = new SvgUnit(SvgUnitType.Percentage,100),
+            Width = new SvgUnit(SvgUnitType.Percentage, 100),
+            Height = new SvgUnit(SvgUnitType.Percentage, 100),
             Fill = SvgPaintServer.None,
             Stroke = new SvgColourServer(Color.Black),
             StrokeWidth = 5f
