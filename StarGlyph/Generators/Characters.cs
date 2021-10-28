@@ -4,7 +4,12 @@ internal static class Characters
 {
     internal static void AddCharacter(this SvgFragment svg, char c, PointF point, StarGlyphOptions options)
     {
-        SvgFragment fragment = new();
+        SvgFragment fragment = new()
+        {
+            X = point.X,
+            Y = point.Y
+        };
+        point = PointF.Empty;//todo: temporary
         if (options.attributeAnnotations)
             fragment.CustomAttributes.Add("letter", c.ToString());
 

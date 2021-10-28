@@ -85,7 +85,7 @@ internal static class Structures
 
         for (int i = 0; i < s.Length; i++)
         {
-            fragment.AddCharacter(s[i], new PointF((i * 100 + 50) * d + point.X, point.Y), options);
+            fragment.AddCharacter(s[i], new PointF((i * 100 + 50) * d + point.X - 50, point.Y - 100), options);
         }
 
         svg.Children.Add(fragment);
