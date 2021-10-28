@@ -2,6 +2,7 @@
 
 internal static class Characters
 {
+    // point represents the top left corner of the character
     internal static void AddCharacter(this SvgFragment svg, char c, PointF point, StarGlyphOptions options)
     {
         SvgFragment fragment = new()
@@ -9,7 +10,6 @@ internal static class Characters
             X = point.X,
             Y = point.Y
         };
-        point = PointF.Empty;//todo: temporary
         if (options.attributeAnnotations)
             fragment.CustomAttributes.Add("letter", c.ToString());
 
@@ -17,194 +17,194 @@ internal static class Characters
         {
             #region vowels
             case 'a':
-                fragment.AddV(point);
+                fragment.AddV();
                 break;
             case 'ă':
-                fragment.AddV(point);
-                fragment.AddBottomBar(point);
+                fragment.AddV();
+                fragment.AddBottomBar();
                 break;
             case 'â':
-                fragment.AddV(point);
-                fragment.AddTopBar(point);
+                fragment.AddV();
+                fragment.AddTopBar();
                 break;
 
             case 'e':
-                fragment.AddFork(point);
+                fragment.AddFork();
                 break;
 
             case 'i':
                 if (options.horizontalLines == false)
-                    fragment.AddHarden(false, point);
+                    fragment.AddHarden(false);
                 break;
             case 'î':
                 if (options.horizontalLines == false)
-                    fragment.AddHarden(false, point);
-                fragment.AddTopBar(point);
+                    fragment.AddHarden(false);
+                fragment.AddTopBar();
                 break;
 
             case 'o':
-                fragment.AddDiamond(point);
+                fragment.AddDiamond();
                 break;
             case 'u':
-                fragment.AddTopO(point);
+                fragment.AddTopO();
                 break;
             #endregion
 
             #region consonants
             case 'b':
-                fragment.AddTopLollipop(point);
-                fragment.AddBottomLollipop(point);
+                fragment.AddTopLollipop();
+                fragment.AddBottomLollipop();
                 break;
             case 'f':
-                fragment.AddTopLollipop(point);
-                fragment.AddHarden(options.horizontalLines, point);
+                fragment.AddTopLollipop();
+                fragment.AddHarden(options.horizontalLines);
                 break;
             case 'p':
-                fragment.AddTopLollipop(point);
+                fragment.AddTopLollipop();
                 break;
             case 'r':
-                fragment.AddTopLollipop(point);
-                fragment.AddAddition(point);
+                fragment.AddTopLollipop();
+                fragment.AddAddition();
                 break;
             case 'g':
-                fragment.AddBottomLollipop(point);
+                fragment.AddBottomLollipop();
                 break;
 
             case 'c':
-                fragment.AddDiamond(point);
-                fragment.AddSubstraction(point);
+                fragment.AddDiamond();
+                fragment.AddSubstraction();
                 break;
             case 'd':
-                fragment.AddDiamond(point);
-                fragment.AddHarden(options.horizontalLines, point);
+                fragment.AddDiamond();
+                fragment.AddHarden(options.horizontalLines);
                 break;
             case 'q':
-                fragment.AddDiamond(point);
-                fragment.AddAddition(point);
+                fragment.AddDiamond();
+                fragment.AddAddition();
                 break;
             case 'h':
-                fragment.AddDiamond(point);
-                fragment.AddSubstraction(point, 1);
+                fragment.AddDiamond();
+                fragment.AddSubstraction( 1);
                 break;
 
             case 'j':
-                fragment.AddI(point);
+                fragment.AddI();
                 break;
             case 'l':
-                fragment.AddI(point);
-                fragment.AddHarden(options.horizontalLines, point);
+                fragment.AddI();
+                fragment.AddHarden(options.horizontalLines);
                 break;
             case 't':
-                fragment.AddDoubleI(point);
+                fragment.AddDoubleI();
                 break;
             case 'ț':
-                fragment.AddDoubleI(point);
-                fragment.AddBottomBar(point);
+                fragment.AddDoubleI();
+                fragment.AddBottomBar();
                 break;
 
             case 'm':
-                fragment.AddDoubleSlash(point);
+                fragment.AddDoubleSlash();
                 break;
             case 'n':
-                fragment.AddDoubleSlash(point);
-                fragment.AddSubstraction(point);
+                fragment.AddDoubleSlash();
+                fragment.AddSubstraction();
                 break;
             case 's':
-                fragment.AddSlash(point);
+                fragment.AddSlash();
                 break;
             case 'ș':
-                fragment.AddSlash(point);
-                fragment.AddBottomBar(point);
+                fragment.AddSlash();
+                fragment.AddBottomBar();
                 break;
             case 'x':
-                fragment.AddSlash(point);
-                fragment.AddHarden(options.horizontalLines, point);
-                fragment.AddSubstraction(point, 1);
+                fragment.AddSlash();
+                fragment.AddHarden(options.horizontalLines);
+                fragment.AddSubstraction( 1);
                 break;
             case 'y':
-                fragment.AddSlash(point);
-                fragment.AddHarden(options.horizontalLines, point);
-                fragment.AddSubstraction(point, 0);
+                fragment.AddSlash();
+                fragment.AddHarden(options.horizontalLines);
+                fragment.AddSubstraction( 0);
                 break;
             case 'z':
-                fragment.AddSlash(point);
-                fragment.AddHarden(options.horizontalLines, point);
+                fragment.AddSlash();
+                fragment.AddHarden(options.horizontalLines);
                 break;
 
             case 'v':
-                fragment.AddBottomO(point);
+                fragment.AddBottomO();
                 break;
             case 'w':
-                fragment.AddTopO(point);
-                fragment.AddBottomO(point);
+                fragment.AddTopO();
+                fragment.AddBottomO();
                 break;
             case 'k':
-                fragment.AddBottomO(point);
-                fragment.AddI(point);
+                fragment.AddBottomO();
+                fragment.AddI();
                 break;
             #endregion
 
             #region numbers
             case '0':
-                fragment.AddDiamond(point);
-                fragment.AddAddition(point);
-                fragment.AddSubstraction(point);
+                fragment.AddDiamond();
+                fragment.AddAddition();
+                fragment.AddSubstraction();
                 break;
             case '1':
-                fragment.AddSubstraction(point, 3);
+                fragment.AddSubstraction( 3);
                 break;
             case '2':
-                fragment.AddSubstraction(point, 2);
+                fragment.AddSubstraction( 2);
                 break;
             case '3':
-                fragment.AddSubstraction(point, 1);
+                fragment.AddSubstraction( 1);
                 break;
             case '4':
-                fragment.AddSubstraction(point, 0);
+                fragment.AddSubstraction( 0);
                 break;
             case '5':
-                fragment.AddAddition(point);
-                fragment.AddSubstraction(point);
+                fragment.AddAddition();
+                fragment.AddSubstraction();
                 break;
             case '6':
-                fragment.AddAddition(point, 0);
+                fragment.AddAddition( 0);
                 break;
             case '7':
-                fragment.AddAddition(point, 1);
+                fragment.AddAddition( 1);
                 break;
             case '8':
-                fragment.AddAddition(point, 2);
+                fragment.AddAddition( 2);
                 break;
             case '9':
-                fragment.AddAddition(point, 3);
+                fragment.AddAddition( 3);
                 break;
             #endregion
 
             #region special
             case ' ':
-                fragment.AddS(point);
+                fragment.AddS();
                 break;
 
             case '+':
-                fragment.AddS(point);
-                fragment.AddAddition(point);
+                fragment.AddS();
+                fragment.AddAddition();
                 break;
             case '-':
-                fragment.AddS(point);
-                fragment.AddSubstraction(point);
+                fragment.AddS();
+                fragment.AddSubstraction();
                 break;
             case '*':
-                fragment.AddS(point);
-                fragment.AddAddition(point, 1);//todo: not happy with this one
+                fragment.AddS();
+                fragment.AddAddition( 1);//todo: not happy with this one
                 break;
             case '/':
-                fragment.AddS(point);
-                fragment.AddSubstraction(point, 1);//todo: not happy with this one
+                fragment.AddS();
+                fragment.AddSubstraction( 1);//todo: not happy with this one
                 break;
             case '=':
-                fragment.AddS(point);
-                fragment.AddAddition(point);
-                fragment.AddSubstraction(point);
+                fragment.AddS();
+                fragment.AddAddition();
+                fragment.AddSubstraction();
                 break;
 
             #endregion
