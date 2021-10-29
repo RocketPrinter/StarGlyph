@@ -30,11 +30,6 @@
                             Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
                         <MudTextField @bind-Value=maxWordsPerLine Label="Max words per line" Immediate=true
                             Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
-    
-                        <MudTextField @bind-Value=offsetX Label="Offset X" Immediate=true
-                            Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Grid3x3/>
-                        <MudTextField @bind-Value=offsetY Label="Offset Y" Immediate=true
-                            Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Grid3x3/>
                     </MudForm>
                 </MudExpansionPanel>
             </MudExpansionPanels>
@@ -52,8 +47,6 @@
     bool formSucess;
     int maxLineLength = 6;
     int maxWordsPerLine = 2;
-    float offsetX = StarGlyphGenerator.defaultOffset.X;
-    float offsetY=StarGlyphGenerator.defaultOffset.Y;
 
     void UpdateDocument()
     {
@@ -66,14 +59,13 @@
                     _ => throw new InvalidDataException()
                 },
                 maxLineLength=maxLineLength,
-                maxWordsPerLine = maxWordsPerLine,
-                offsetOverride = new System.Drawing.PointF(offsetX,offsetY),
+                maxWordsPerLine = maxWordsPerLine
             });
 
     }
 
     public Index()
     {
-        //document = StarGlyphGenerator.StringToSVG(input);
+        document = StarGlyphGenerator.StringToSVG(input);
     }
 }
