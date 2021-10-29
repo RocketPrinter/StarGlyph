@@ -2,13 +2,12 @@
 
 internal static class Characters
 {
-    // point represents the top left corner of the character
-    internal static void AddCharacter(this SvgFragment svg, char c, PointF point, StarGlyphOptions options)
+    internal static void AddCharacter(this SvgFragment svg, char c, PointF offset, StarGlyphOptions options)
     {
         SvgFragment fragment = new()
         {
-            X = point.X,
-            Y = point.Y
+            X = offset.X,
+            Y = offset.Y
         };
         if (options.attributeAnnotations)
             fragment.CustomAttributes.Add("letter", c.ToString());
@@ -215,7 +214,7 @@ internal static class Characters
                 break;
         }
 
-        svg.Children.Add(fragment);
         //Console.WriteLine($"{c}   {fragment.Bounds.Height}");
+        svg.Children.Add(fragment);
     }
 }

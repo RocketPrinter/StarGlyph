@@ -14,13 +14,13 @@ using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(PointF? offsetOverride = null, bool horizontalLines = false, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine = 2, bool throwOnInvalidChars = true);
+public record class StarGlyphOptions(bool horizontalLines = false, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine = 2, bool throwOnInvalidChars = true);
 
 public static class StarGlyphGenerator
 {
-    public static readonly StarGlyphOptions defaultOptions = new StarGlyphOptions();
-    // needed because of svg qurikyness I don't understand
-    public static readonly PointF defaultOffset = new PointF(1000, 5000);
+    public static readonly StarGlyphOptions defaultOptions = new();
+    const float strokeWidth = 5;
+    readonly static PointF defaultOffset = new (strokeWidth, strokeWidth);
 
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
@@ -40,9 +40,9 @@ public static class StarGlyphGenerator
 
         SvgDocument document = CreateDocument(options);
 
-        document.AddLine(c.ToString(), true, options.offsetOverride ?? defaultOffset, options);
+        document.AddLine(c.ToString(), true, defaultOffset, options, out var bounds);
 
-        document.FinalizeDocument();
+        document.FinalizeDocument(bounds);
         return document;
     }
 
@@ -54,9 +54,9 @@ public static class StarGlyphGenerator
 
         SvgDocument document = CreateDocument(options);
 
-        document.AddTree(s, options.offsetOverride ?? defaultOffset, options);
+        document.AddPhrase(s, defaultOffset, options, out var bounds);
 
-        document.FinalizeDocument();
+        document.FinalizeDocument(bounds);
         return document;
     }
 
@@ -66,11 +66,12 @@ public static class StarGlyphGenerator
 
         var document = CreateDocument(options);
 
-        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, defaultOffset, options);
-        document.AddLine(ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString(), true, new PointF(defaultOffset.X, defaultOffset.Y + 200), options with { horizontalLines = true });
+        string alphabet = ValidChars.Aggregate(new StringBuilder(), (sb, x) => sb.Append(x)).ToString();
+        document.AddLine(alphabet, false, defaultOffset, options, out _);
+        document.AddLine(alphabet, false, new PointF(defaultOffset.X, defaultOffset.Y + 200), options with { horizontalLines = true }, out _);
 
 
-        document.FinalizeDocument();
+        document.FinalizeDocument(new SizeF(alphabet.Length*100, 400));
         return document;
     }
 
@@ -84,15 +85,15 @@ public static class StarGlyphGenerator
             Height = new SvgUnit(SvgUnitType.Percentage, 100),
             Fill = SvgPaintServer.None,
             Stroke = new SvgColourServer(Color.Black),
-            StrokeWidth = 5f
+            StrokeWidth = strokeWidth
         };
         if (options.attributeAnnotations)
             document.CustomAttributes.Add("about", "Made with: https://github.com/RocketPrinter/StarGlyph");
         return document;
     }
 
-    private static void FinalizeDocument(this SvgDocument document)
+    private static void FinalizeDocument(this SvgDocument document, SizeF bounds)
     {
-        document.ViewBox = new(document.Bounds.X, document.Bounds.Y, document.Bounds.Right, document.Bounds.Bottom);
+        document.ViewBox = new(0, 0, bounds.Width + strokeWidth * 2, bounds.Height + strokeWidth * 2);
     }
 }

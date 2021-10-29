@@ -2,35 +2,74 @@
 
 internal static class Structures
 {
-    internal static void AddTree(this SvgFragment svg, string s, PointF point, StarGlyphOptions options)
+    internal static void AddPhrase(this SvgFragment svg, string s, PointF offset, StarGlyphOptions options, out SizeF bounds)
     {
-        int h = 0;
-        foreach (string sentence in s.Split(StarGlyphGenerator.sentenceSeparators, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+        SvgFragment fragment = new()
+        {
+            X = offset.X,
+            Y = offset.Y
+        };
+
+        // parse the string and calculate bounds
+        ParsePhrase(s, options, out var parseReult, out bounds, out int rootX);
+
+        // draw sentences
+        bool first = true;
+        float h = bounds.Height;
+        foreach (List<string> sentence in parseReult)
         {
             // separators
-            if (h == 0)
-                svg.Children.Add(new SvgPolygon()
+            h -= 100;
+            if (first)
+            {
+                first = false;
+                fragment.Children.Add(new SvgPolygon()
                 {
-                    Points = new SvgPointCollection() { -100, 0, 0, -100, 100, 0 }.AddPoint(point)
+                    Points = new SvgPointCollection() { 0, 100, 100, 0, 200, 100 }
+                        .AddPoint(new PointF(rootX - 100, h))
                 });
+            }
             else
-                svg.Children.Add(new SvgPolygon()
+                fragment.Children.Add(new SvgPolygon()
                 {
-                    Points = new SvgPointCollection() { 0, 0, -100, -50, 0, -100, 100, -50 }.AddPoint(new PointF(point.X, point.Y - h * 100))
+                    Points = new SvgPointCollection() { 0, 50, 100, 0, 200, 50, 100, 100 }
+                        .AddPoint(new PointF(rootX - 100, h))
                 });
-            h++;
 
-            h += AddSentence(sentence, h);
+            // draw branches
+            int i=0;
+            foreach (string branch in sentence)
+            {
+                if (i % 2 == 0)
+                    h-= 200;
+
+                bool reverse = (i+1)%4<=1;
+                fragment.AddLine(branch,reverse,new PointF(reverse?rootX-branch.Length*100:rootX,h), options, out _);
+
+                i++;
+            }
         }
 
-        svg.Children.Add(new SvgLine()
+        fragment.Children.Add(new SvgLine()
         {
-            StartY = -100,
-            EndY = -h * 100
-        }.AddPoint(point));
+            StartX = rootX,
+            EndX = rootX,
+            StartY = 0,
+            EndY = bounds.Height
+        });
 
-        // returns the height of the sentence
-        int AddSentence(string sentence, int hOffset)
+        svg.Children.Add(fragment);
+    }
+
+    private static void ParsePhrase(string s, StarGlyphOptions options, out List<List<string>> parseResult, out SizeF bounds, out int rootX)
+    {
+        parseResult = new();
+        bounds = new();
+        rootX = 0;
+
+        // parsing phrase into sentences
+        var sentences = s.Split(StarGlyphGenerator.sentenceSeparators, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        foreach (var sentence in sentences)
         {
             // parsing sentence into branches
             string[] tokens = sentence.Split(" ", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
@@ -43,50 +82,74 @@ internal static class Structures
             {
                 if (branches[i].Length == 0 || (wordsPerLine < options.maxWordsPerLine && token.Length + branches[i].Length <= options.maxLineLength))
                 {
+                    // add word to current branch
                     if (branches[i].Length > 0)
                         branches[i] += ' ';
-                    wordsPerLine++;
                     branches[i] += token;
+                    wordsPerLine++;
                 }
                 else
                 {
+                    // create new branch
                     branches.Add(token);
                     i++;
                     wordsPerLine = 1;
                 }
             }
+            parseResult.Add(branches);
 
-            // drawing branches
-            for (i = 0; i < branches.Count; i++)
-                svg.AddLine(branches[i], (i + 3) % 4 <= 1, new PointF(point.X, -100 - 200 * (i / 2) - 100 * hOffset + point.Y), options);
+            // calculating bounds
+            int xmax = 0;
+            for (int j = 0; j+1 < branches.Count; j += 2)
+            {
+                xmax = Math.Max(xmax, branches[j].Length + branches[j+1].Length);
+            }
+            xmax = Math.Max(xmax, branches[branches.Count - 1].Length);
 
-            // returning height
-            return (branches.Count - 1) / 2 * 2 + 2;
+            bounds = new(Math.Max(bounds.Width,xmax * 100),100 + bounds.Height + 200 * (branches.Count/2+branches.Count%2));
+
+            for (int j = 0; j < branches.Count;)
+            {
+                rootX = Math.Max(rootX,branches[j].Length);
+
+                if (j % 4 == 0)
+                    j += 3;
+                else
+                    j++;
+            }
         }
+
+        rootX *= 100;
     }
 
-    // direction == false <-
-    // direction == true ->
-    internal static void AddLine(this SvgFragment svg, string s, bool direction, PointF point, StarGlyphOptions options)
+    internal static void AddLine(this SvgFragment svg, string s, bool reverse, PointF offset, StarGlyphOptions options, out SizeF bounds)
     {
-        float d = (direction ? 1 : -1);
+        float d = (reverse ? 1 : -1);
 
-        SvgFragment fragment = new();
+        SvgFragment fragment = new()
+        {
+            X = offset.X,
+            Y = offset.Y
+        };
         if (options.attributeAnnotations)
             fragment.CustomAttributes.Add("line", s);
 
         if (options.horizontalLines)
             fragment.Children.Add(new SvgLine()
             {
-                EndX = s.Length * 100 * d,
+                StartX = 0,
+                EndX = s.Length * 100,
+                StartY = 100,
+                EndY = 100
             }
-            .AddPoint(point)
             );
 
         for (int i = 0; i < s.Length; i++)
         {
-            fragment.AddCharacter(s[i], new PointF((i * 100 + 50) * d + point.X - 50, point.Y - 100), options);
+            fragment.AddCharacter(s[reverse?s.Length-i-1:i], new PointF(i * 100 ,0), options);
         }
+
+        bounds = new(s.Length*100, 200);
 
         svg.Children.Add(fragment);
     }
