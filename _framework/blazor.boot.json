@@ -8,7 +8,7 @@
   "resources": {
     "assembly": {
       "Fizzler.dll": "sha256-EednvL7mFvXHl+7GDm52eJ4fIzdoYrK08j6F+igeOco=",
-      "GHPage.dll": "sha256-6bnEgEGtbaq8nGdg1l9EFaFRUwr8P58O793B8jY9wv8=",
+      "GHPage.dll": "sha256-nMj+OBxAvdpLN3Zi9f3sbdJdc8gFn8CEd179twPoKEo=",
       "Microsoft.AspNetCore.Components.dll": "sha256-kqVTBuY729jMXFeftyG1DTRpgTWDOk87OK4pd7A5eIA=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-1CA0aXdQlh7jdA84c8deq61NEwru+XInPg9aFy9N6y4=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-UV+UrvojEqzniVndEkXeTFveEJMrvPC\/g1X2425ANKk=",
@@ -28,7 +28,7 @@
       "MudBlazor.dll": "sha256-ii\/J5pkDRRogn\/j98BZlX46fk5z41kfHbo61PS05iDw=",
       "netstandard.dll": "sha256-gqBrvdQ2NK5rfxBs0cgyLHpCILNRDvkN6WdaRCmXVWI=",
       "runtime.osx.10.10-x64.CoreCompat.System.Drawing.dll": "sha256-DPJ3CSXDNA\/BavVEpjgucHiEabqkgR\/0O5zx05fuTMg=",
-      "StarGlyph.dll": "sha256-NB2DWr1ku\/24MCkeaN7+rWPq5VU\/ls+3QdDRbQcGdsI=",
+      "StarGlyph.dll": "sha256-LYPKCtB0PpUTJ1Fq7ZZLra7ommMYgJhM7SNFGkZz3SE=",
       "Svg.dll": "sha256-EN3dPpvKT1yMWQvZmzZLxJxKtHR3ed7yMS8zJt02INA=",
       "System.Collections.Concurrent.dll": "sha256-4uZYShEIpnNgUP6MYqCnE1OXtvOfolZJ69Jyd3gJUzE=",
       "System.Collections.dll": "sha256-vLiTxJEGOXkkpvfgP35HV\/5U0ji7FlrcmZFJxvUMG1E=",
