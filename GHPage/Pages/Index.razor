@@ -1,15 +1,37 @@
-﻿@using StarGlyph
+﻿@using BlazorDownloadFile
+@using StarGlyph
 @using Svg
+@using System.Xml
+
+@inject IBlazorDownloadFileService Download
 
 @page "/"
 
 <PageTitle>StarGlyph</PageTitle>
 
-<div Class="d-flex flex-row my-2 mx-4">
+<div class="d-flex flex-row my-2 mx-4">
     <MudGrid Spacing=2>
         <MudItem Class="flex-grow-1">
-            <MudPaper Height=100% Outlined="true">
-                svg here
+            <MudPaper class="relative" Height=100% Outlined="true">
+                @*zoom and download*@
+                <div class="topleft">
+                    <MudFab OnClick=@(()=>zoom=MathF.Min(maxZoom, zoom*2))
+                        Color="Color.Secondary" Size=Size.Small Icon="@Icons.Material.Filled.Add"/>
+
+                    <MudText Inline=true Typo=Typo.body1 Class="mx-1">@zoom%</MudText>
+
+                    <MudFab OnClick=@(()=>zoom=MathF.Max(minZoom, zoom/2))
+                        Color="Color.Secondary" Size=Size.Small Icon="@Icons.Material.Filled.Remove"/> 
+                </div>  
+
+                <div class="topright">
+                    <MudFab  OnClick=DownloadDocument
+                        Color="Color.Secondary" Size=Size.Medium Icon="@Icons.Material.Filled.Download"/>
+                </div>
+
+                @*svg*@
+
+
             </MudPaper>
         </MudItem>
     
@@ -39,8 +61,12 @@
 
 @code
 {
-    SvgDocument document;
+    SvgDocument? document;
+    string? documentContent;
     string input="Replace this with something funny";
+
+    float zoom=100;
+    const float minZoom = 12.5f, maxZoom = 800f;
 
     MudForm? form;
     MudChip? selectedStyle;
@@ -51,21 +77,27 @@
     void UpdateDocument()
     {
         document = StarGlyphGenerator.StringToSVG(input, new StarGlyphOptions
+        {
+            horizontalLines = (selectedStyle != null ? selectedStyle.Text : "Default") switch
             {
-                horizontalLines = selectedStyle!.Text switch
-                {
-                    "Default" => false,
-                    "Strikethrough" => true,
-                    _ => throw new InvalidDataException()
-                },
-                maxLineLength=maxLineLength,
-                maxWordsPerLine = maxWordsPerLine
-            });
+                "Default" => false,
+                "Strikethrough" => true,
+                _ => throw new InvalidDataException()
+            },
+            maxLineLength=maxLineLength,
+            maxWordsPerLine = maxWordsPerLine
+        });
 
+        documentContent = document.GetXML();
+    }
+
+    async void DownloadDocument()
+    {
+        await Download.DownloadFileFromText("StarGlyph.svg", documentContent, contentType:"application/xml",  encoderShouldEmitUTF8Identifier:false);
     }
 
     public Index()
     {
-        document = StarGlyphGenerator.StringToSVG(input);
+        UpdateDocument();
     }
 }

@@ -1,0 +1,11 @@
+﻿.topleft {
+    position: absolute;
+    top: 8px;
+    left: 16px;
+}
+
+.topright {
+    position: absolute;
+    top: 8px;
+    right: 16px;
+}

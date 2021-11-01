@@ -1,12 +1,4 @@
-﻿/// TODO:
-/// implement the thing itself
-/// CLI tool
-/// GUI tool (in Blazor)
-/// make repo public
-/// nuget pkg
-/// switch to SvgPoint or Vector2 from System.Numberics
-
-global using Svg;
+﻿global using Svg;
 global using System.Drawing;
 
 using StarGlyph.Generators;
