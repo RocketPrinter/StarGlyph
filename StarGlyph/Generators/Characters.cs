@@ -210,7 +210,7 @@ internal static class Characters
 
             default:
                 if (options.throwOnInvalidChars)
-                    throw new ArgumentNullException($"Invalid character '{c}' found.");
+                    throw new ArgumentOutOfRangeException($"Invalid character '{c}' found.");
                 break;
         }
 

@@ -30,14 +30,14 @@
                 </div>
 
                 @*svg*@
-
+                
 
             </MudPaper>
         </MudItem>
     
         <MudItem xs=5 Class="d-flex flex-column">
             @*Options*@
-            <MudExpansionPanels>
+            <MudExpansionPanels Class="mb-2">
                 <MudExpansionPanel Text="Options">
                     <MudForm  @bind-IsValid=formSucess>
                         <div Class="d-flex flex-row">
@@ -48,22 +48,27 @@
                             </MudChipSet>
                          </div>
 
-                        <MudTextField @bind-Value=maxLineLength Label="Max line length" Immediate=true
+                        <MudTextField @bind-Value=maxLineLength Label="Max line length" 
                             Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
-                        <MudTextField @bind-Value=maxWordsPerLine Label="Max words per line" Immediate=true
+                        <MudTextField @bind-Value=maxWordsPerLine Label="Max words per line"
                             Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
                     </MudForm>
                 </MudExpansionPanel>
             </MudExpansionPanels>
+
+            <MudTextField T=string Variant=Variant.Outlined Label="Input text" Lines="10"
+                Value=@input ValueChanged=@((e)=>{input = e; UpdateDocument();})
+                ErrorText="Invalid characters are used! Use A-Z ĂÂĂȘȚ 0-9 +-*-" Error=@inputError/>
         </MudItem>
     </MudGrid>
 </div>
 
 @code
 {
+    bool inputError;
+    string input = "This is some text written in StarGlyph";
     SvgDocument? document;
     string? documentContent;
-    string input="Replace this with something funny";
 
     float zoom=100;
     const float minZoom = 12.5f, maxZoom = 800f;
@@ -76,7 +81,7 @@
 
     void UpdateDocument()
     {
-        document = StarGlyphGenerator.StringToSVG(input, new StarGlyphOptions
+        var options = new StarGlyphOptions()
         {
             horizontalLines = (selectedStyle != null ? selectedStyle.Text : "Default") switch
             {
@@ -84,9 +89,21 @@
                 "Strikethrough" => true,
                 _ => throw new InvalidDataException()
             },
-            maxLineLength=maxLineLength,
-            maxWordsPerLine = maxWordsPerLine
-        });
+            maxLineLength = maxLineLength,
+            maxWordsPerLine = maxWordsPerLine,
+            throwOnInvalidChars = true
+        };
+
+        try
+        {
+            document = StarGlyphGenerator.StringToSVG(input ?? "", options);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            inputError = true;
+            return;
+        }
+        inputError = false;
 
         documentContent = document.GetXML();
     }
@@ -96,7 +113,7 @@
         await Download.DownloadFileFromText("StarGlyph.svg", documentContent, contentType:"application/xml",  encoderShouldEmitUTF8Identifier:false);
     }
 
-    public Index()
+    protected override void OnInitialized()
     {
         UpdateDocument();
     }

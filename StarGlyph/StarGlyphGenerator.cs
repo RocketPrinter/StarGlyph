@@ -16,6 +16,7 @@ public static class StarGlyphGenerator
 
     /// <summary>
     /// Valid characters, uses a HashSet under the hood.
+    /// Invalid charcaters will throw ArgumentOutOfRangeException if throwOnInvalidChars==true
     /// </summary>
     public static readonly IReadOnlySet<char> ValidChars = new HashSet<char>()
     {
