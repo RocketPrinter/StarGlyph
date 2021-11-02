@@ -25,12 +25,18 @@
                 </div>  
 
                 <div class="topright">
-                    <MudFab  OnClick=DownloadDocument
+                    <MudFab OnClick=DownloadDocument
                         Color="Color.Secondary" Size=Size.Medium Icon="@Icons.Material.Filled.Download"/>
                 </div>
 
                 @*svg*@
-                
+                <div class="svgViewer">
+                    <MudSkeleton Width=100% Height=100% SkeletonType=SkeletonType.Rectangle Animation=Animation.Wave/>
+                </div>
+
+                <svg x=200 y=200>
+                    @((MarkupString)(documentContent ?? ""))
+                </svg>
 
             </MudPaper>
         </MudItem>
@@ -39,26 +45,26 @@
             @*Options*@
             <MudExpansionPanels Class="mb-2">
                 <MudExpansionPanel Text="Options">
-                    <MudForm  @bind-IsValid=formSucess>
-                        <div Class="d-flex flex-row">
-                            <MudText Typo=Typo.body1 Class="my-2 mr-2">Style:</MudText>
-                            <MudChipSet @bind-SelectedChip=selectedStyle Filter="true" Mandatory=true>
-                                <MudChip Text="Default" Color=Color.Primary Default=true/>
-                                <MudChip Text="Strikethrough" Color=Color.Primary/>
-                            </MudChipSet>
-                         </div>
+                    <div Class="d-flex flex-row">
+                        <MudText Typo=Typo.body1 Class="my-2 mr-2">Style:</MudText>
+                        <MudChipSet Filter="true" Mandatory=true SelectedChipChanged=UpdateStyle>
+                            <MudChip Text="Default" Color=Color.Primary Default=true/>
+                            <MudChip Text="Strikethrough" Color=Color.Primary/>
+                        </MudChipSet>
+                     </div>
 
-                        <MudTextField @bind-Value=maxLineLength Label="Max line length" 
-                            Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
-                        <MudTextField @bind-Value=maxWordsPerLine Label="Max words per line"
-                            Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
-                    </MudForm>
+                    <MudTextField T=int Label="Max line length" Immediate=true
+                        Value=@maxLineLength ValueChanged=@((x)=>{maxLineLength=x;options = options with {maxLineLength=x};UpdateDocument();})
+                        Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
+                    <MudTextField T=int Label="Max words per line" Immediate=true
+                        Value=@maxWordsPerLine ValueChanged=@((x)=>{maxWordsPerLine=x;options = options with {maxWordsPerLine=x};UpdateDocument();})
+                        Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
                 </MudExpansionPanel>
             </MudExpansionPanels>
 
             <MudTextField T=string Variant=Variant.Outlined Label="Input text" Lines="10"
                 Value=@input ValueChanged=@((e)=>{input = e; UpdateDocument();})
-                ErrorText="Invalid characters are used! Use A-Z ĂÂĂȘȚ 0-9 +-*-" Error=@inputError/>
+                ErrorText="Invalid characters are used! Use A-Z ĂÂĂȘȚ 0-9 +-*- .?!\\n" Error=@inputError/>
         </MudItem>
     </MudGrid>
 </div>
@@ -70,30 +76,28 @@
     SvgDocument? document;
     string? documentContent;
 
-    float zoom=100;
+    float zoom = 100;
     const float minZoom = 12.5f, maxZoom = 800f;
 
-    MudForm? form;
     MudChip? selectedStyle;
-    bool formSucess;
     int maxLineLength = 6;
     int maxWordsPerLine = 2;
 
+    StarGlyphOptions options = StarGlyphGenerator.defaultOptions with { throwOnInvalidChars = true };
+
+    void UpdateStyle(MudChip value)
+    {
+        options = options with { horizontalLines= value.Text switch
+        {
+            "Default" => false,
+            "Strikethrough" => true,
+            _ => throw new InvalidDataException()
+        }};
+        UpdateDocument();
+    }
+
     void UpdateDocument()
     {
-        var options = new StarGlyphOptions()
-        {
-            horizontalLines = (selectedStyle != null ? selectedStyle.Text : "Default") switch
-            {
-                "Default" => false,
-                "Strikethrough" => true,
-                _ => throw new InvalidDataException()
-            },
-            maxLineLength = maxLineLength,
-            maxWordsPerLine = maxWordsPerLine,
-            throwOnInvalidChars = true
-        };
-
         try
         {
             document = StarGlyphGenerator.StringToSVG(input ?? "", options);
