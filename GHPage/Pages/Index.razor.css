@@ -1,5 +1,4 @@
 ﻿.topleft {
-    cursor: pointer;
     position: absolute;
     top: 8px;
     left: 16px;
@@ -7,7 +6,6 @@
 }
 
 .topright {
-    cursor: pointer;
     position: absolute;
     top: 8px;
     right: 16px;
@@ -15,7 +13,6 @@
 }
 
 .svgViewer {
-    cursor: grab;
     position: relative;
     width: 100%;
     height: 100%;

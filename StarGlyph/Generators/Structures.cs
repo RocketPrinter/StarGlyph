@@ -43,8 +43,8 @@ internal static class Structures
                 if (i % 2 == 0)
                     h-= 200;
 
-                bool reverse = (i+1)%4<=1;
-                fragment.AddLine(branch,reverse,new PointF(reverse?rootX-branch.Length*100:rootX,h), options, out _);
+                bool leftBranch = (i+1)%4<=1;
+                fragment.AddLine(branch,leftBranch,new PointF(leftBranch?rootX-branch.Length*100:rootX,h), options, out _);
 
                 i++;
             }
@@ -99,27 +99,19 @@ internal static class Structures
             parseResult.Add(branches);
 
             // calculating bounds
-            int xmax = 0;
-            for (int j = 0; j+1 < branches.Count; j += 2)
+            int leftMax=0, rightMax=0;
+            for (int j = 0; j < branches.Count; j++)
             {
-                xmax = Math.Max(xmax, branches[j].Length + branches[j+1].Length);
-            }
-            xmax = Math.Max(xmax, branches[branches.Count - 1].Length);
-
-            bounds = new(Math.Max(bounds.Width,xmax * 100),100 + bounds.Height + 200 * (branches.Count/2+branches.Count%2));
-
-            for (int j = 0; j < branches.Count;)
-            {
-                rootX = Math.Max(rootX,branches[j].Length);
-
-                if (j % 4 == 0)
-                    j += 3;
+                bool leftBranch = (j + 1) % 4 <= 1;
+                if (leftBranch)
+                    leftMax = Math.Max(leftMax, branches[j].Length);
                 else
-                    j++;
+                    rightMax = Math.Max(branches[j].Length, rightMax);
             }
-        }
 
-        rootX *= 100;
+            bounds = new(Math.Max(bounds.Width, (leftMax+rightMax) * 100), 100 + bounds.Height + 200 * (branches.Count / 2 + branches.Count % 2));
+            rootX = Math.Max(rootX,leftMax*100);
+        }
     }
 
     internal static void AddLine(this SvgFragment svg, string s, bool reverse, PointF offset, StarGlyphOptions options, out SizeF bounds)

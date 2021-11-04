@@ -9,12 +9,12 @@
 
 <PageTitle>StarGlyph</PageTitle>
 
-<div class="d-flex flex-row my-2 mx-4">
+<div class="my-2 mx-4">
     <MudGrid Spacing=2>
         <MudItem Class="flex-grow-1">
-            <MudPaper class="relative" Height=100% Outlined="true">
+            <MudPaper class="relative pa-4" Height=100% Outlined="true">
                 @*zoom and download*@
-                <div class="topleft">
+                @*<div class="topleft">
                     <MudFab OnClick=@(()=>zoom=MathF.Min(maxZoom, zoom*2))
                         Color="Color.Secondary" Size=Size.Small Icon="@Icons.Material.Filled.Add"/>
 
@@ -22,7 +22,7 @@
 
                     <MudFab OnClick=@(()=>zoom=MathF.Max(minZoom, zoom/2))
                         Color="Color.Secondary" Size=Size.Small Icon="@Icons.Material.Filled.Remove"/> 
-                </div>  
+                </div>*@
 
                 <div class="topright">
                     <MudFab OnClick=DownloadDocument
@@ -30,13 +30,12 @@
                 </div>
 
                 @*svg*@
-                <div class="svgViewer">
-                    <MudSkeleton Width=100% Height=100% SkeletonType=SkeletonType.Rectangle Animation=Animation.Wave/>
+                @*I can't find a better way to get the height*@
+                <div height=100vh>
+                    <svg class="svgViewer" height=80vh>
+                        @((MarkupString)(documentContent ?? ""))
+                    </svg>
                 </div>
-
-                <svg x=200 y=200>
-                    @((MarkupString)(documentContent ?? ""))
-                </svg>
 
             </MudPaper>
         </MudItem>
