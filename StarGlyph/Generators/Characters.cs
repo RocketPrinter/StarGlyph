@@ -83,7 +83,7 @@ internal static class Characters
                 break;
             case 'h':
                 fragment.AddDiamond();
-                fragment.AddSubstraction( 1);
+                fragment.AddSubstraction(1);
                 break;
 
             case 'j':
@@ -118,12 +118,12 @@ internal static class Characters
             case 'x':
                 fragment.AddSlash();
                 fragment.AddHarden(options.horizontalLines);
-                fragment.AddSubstraction( 1);
+                fragment.AddSubstraction(1);
                 break;
             case 'y':
                 fragment.AddSlash();
                 fragment.AddHarden(options.horizontalLines);
-                fragment.AddSubstraction( 0);
+                fragment.AddSubstraction(0);
                 break;
             case 'z':
                 fragment.AddSlash();
@@ -150,32 +150,32 @@ internal static class Characters
                 fragment.AddSubstraction();
                 break;
             case '1':
-                fragment.AddSubstraction( 3);
+                fragment.AddSubstraction(3);
                 break;
             case '2':
-                fragment.AddSubstraction( 2);
+                fragment.AddSubstraction(2);
                 break;
             case '3':
-                fragment.AddSubstraction( 1);
+                fragment.AddSubstraction(1);
                 break;
             case '4':
-                fragment.AddSubstraction( 0);
+                fragment.AddSubstraction(0);
                 break;
             case '5':
                 fragment.AddAddition();
                 fragment.AddSubstraction();
                 break;
             case '6':
-                fragment.AddAddition( 0);
+                fragment.AddAddition(0);
                 break;
             case '7':
-                fragment.AddAddition( 1);
+                fragment.AddAddition(1);
                 break;
             case '8':
-                fragment.AddAddition( 2);
+                fragment.AddAddition(2);
                 break;
             case '9':
-                fragment.AddAddition( 3);
+                fragment.AddAddition(3);
                 break;
             #endregion
 
@@ -194,11 +194,11 @@ internal static class Characters
                 break;
             case '*':
                 fragment.AddS();
-                fragment.AddAddition( 1);//todo: not happy with this one
+                fragment.AddAddition(1);//todo: not happy with this one
                 break;
             case '/':
                 fragment.AddS();
-                fragment.AddSubstraction( 1);//todo: not happy with this one
+                fragment.AddSubstraction(1);//todo: not happy with this one
                 break;
             case '=':
                 fragment.AddS();
@@ -211,6 +211,20 @@ internal static class Characters
             default:
                 if (options.throwOnInvalidChars)
                     throw new ArgumentOutOfRangeException($"Invalid character '{c}' found.");
+                if (options.drawInvalidCharsAsText)
+                {
+                    //fragment.AddI();
+                    //fragment.AddHarden(false);
+                    fragment.Children.Add(new SvgText()
+                    {
+                        // it's not perfect but it works well enough
+                        X = new() { 50 },
+                        Y = new() { 140 },
+                        FontSize = 120,
+                        Text = c.ToString(),
+                        TextAnchor=SvgTextAnchor.Middle
+                    });
+                }
                 break;
         }
 

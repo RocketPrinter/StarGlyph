@@ -6,7 +6,7 @@ using System.Text;
 
 namespace StarGlyph;
 
-public record class StarGlyphOptions(bool horizontalLines = false, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine = 2, bool throwOnInvalidChars = true);
+public record class StarGlyphOptions(bool horizontalLines = false, bool attributeAnnotations = true, int maxLineLength = 6, int maxWordsPerLine = 2, bool throwOnInvalidChars = false, bool drawInvalidCharsAsText = true);
 
 public static class StarGlyphGenerator
 {
