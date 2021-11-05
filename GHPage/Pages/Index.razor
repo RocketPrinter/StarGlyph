@@ -11,7 +11,7 @@
 
 <div class="my-2 mx-4">
     <MudGrid Spacing=2>
-        <MudItem Class="flex-grow-1">
+        <MudItem Class=" flex-grow-1">
             <MudPaper class="relative pa-4" Height=100% Outlined="true">
                 @*zoom and download*@
                 @*<div class="topleft">
@@ -30,8 +30,8 @@
                 </div>
 
                 @*svg*@
-                @*I can't find a better way to get the height*@
-                <div height=100vh>
+                @*can't find a way to make it fill all the avaiable height*@
+                <div>
                     <svg class="svgViewer" height=80vh>
                         @((MarkupString)(documentContent ?? ""))
                     </svg>
@@ -40,9 +40,9 @@
             </MudPaper>
         </MudItem>
     
-        <MudItem xs=5 Class="d-flex flex-column">
+        <MudItem xs=5>
             @*Options*@
-            <MudExpansionPanels Class="mb-2">
+            <MudExpansionPanels Class="mb-4">
                 <MudExpansionPanel Text="Options">
                     <div Class="d-flex flex-row">
                         <MudText Typo=Typo.body1 Class="my-2 mr-2">Style:</MudText>
@@ -58,56 +58,54 @@
                     <MudTextField T=int Label="Max words per line" Immediate=true
                         Value=@maxWordsPerLine ValueChanged=@((x)=>{maxWordsPerLine=x;options = options with {maxWordsPerLine=x};UpdateDocument();})
                         Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
+                    @*<MudCheckBox Label="Allow invalid characters"/>*@
                 </MudExpansionPanel>
             </MudExpansionPanels>
 
-            <MudTextField T=string Variant=Variant.Outlined Label="Input text" Lines="10"
-                Value=@input ValueChanged=@((e)=>{input = e; UpdateDocument();})
-                ErrorText="Invalid characters are used! Use A-Z ĂÂĂȘȚ 0-9 +-*- .?!\\n" Error=@inputError/>
+            <MudTextField @bind-Value=input Variant=Variant.Outlined Label="Input text" Lines="10" Immediate=true
+                HelperTextOnFocus=true HelperText="Valid characters: A-Z ĂÂĂȘȚ 0-9 +-*- .?!"/>
+
+            <div class="d-flex justify-center">
+                <MudButton Color=Color.Secondary Variant=Variant.Filled StartIcon=@Icons.Filled.Translate
+                    Disabled=@(input==oldInput) OnClick=UpdateDocument>Translate</MudButton>
+            </div>
+            
         </MudItem>
     </MudGrid>
 </div>
 
 @code
 {
-    bool inputError;
-    string input = "This is some text written in StarGlyph";
+    string input = "This is some text written in StarGlyph", oldInput="";
     SvgDocument? document;
     string? documentContent;
 
-    float zoom = 100;
-    const float minZoom = 12.5f, maxZoom = 800f;
+    //float zoom = 100;
+    //const float minZoom = 12.5f, maxZoom = 800f;
 
     MudChip? selectedStyle;
     int maxLineLength = 6;
     int maxWordsPerLine = 2;
 
-    StarGlyphOptions options = StarGlyphGenerator.defaultOptions with { throwOnInvalidChars = true };
+    StarGlyphOptions options = StarGlyphGenerator.defaultOptions;
 
     void UpdateStyle(MudChip value)
     {
         options = options with { horizontalLines= value.Text switch
-        {
-            "Default" => false,
-            "Strikethrough" => true,
-            _ => throw new InvalidDataException()
-        }};
+            {
+                "Default" => false,
+                "Strikethrough" => true,
+                _ => throw new InvalidDataException()
+            }};
         UpdateDocument();
     }
 
     void UpdateDocument()
     {
-        try
-        {
-            document = StarGlyphGenerator.StringToSVG(input ?? "", options);
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            inputError = true;
-            return;
-        }
-        inputError = false;
+        oldInput = input;
 
+        document = StarGlyphGenerator.StringToSVG(input ?? "", options);
+        
         documentContent = document.GetXML();
     }
 
