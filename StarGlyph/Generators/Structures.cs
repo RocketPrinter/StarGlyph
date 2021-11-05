@@ -99,7 +99,7 @@ internal static class Structures
             parseResult.Add(branches);
 
             // calculating bounds
-            int leftMax=0, rightMax=0;
+            int leftMax=0, rightMax=1;
             for (int j = 0; j < branches.Count; j++)
             {
                 bool leftBranch = (j + 1) % 4 <= 1;

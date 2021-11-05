@@ -13,17 +13,7 @@
     <MudGrid Spacing=2>
         <MudItem Class=" flex-grow-1">
             <MudPaper class="relative pa-4" Height=100% Outlined="true">
-                @*zoom and download*@
-                @*<div class="topleft">
-                    <MudFab OnClick=@(()=>zoom=MathF.Min(maxZoom, zoom*2))
-                        Color="Color.Secondary" Size=Size.Small Icon="@Icons.Material.Filled.Add"/>
-
-                    <MudText Inline=true Typo=Typo.body1 Class="mx-1">@zoom%</MudText>
-
-                    <MudFab OnClick=@(()=>zoom=MathF.Max(minZoom, zoom/2))
-                        Color="Color.Secondary" Size=Size.Small Icon="@Icons.Material.Filled.Remove"/> 
-                </div>*@
-
+                @*download button*@
                 <div class="topright">
                     <MudFab OnClick=DownloadDocument
                         Color="Color.Secondary" Size=Size.Medium Icon="@Icons.Material.Filled.Download"/>
@@ -58,16 +48,16 @@
                     <MudTextField T=int Label="Max words per line" Immediate=true
                         Value=@maxWordsPerLine ValueChanged=@((x)=>{maxWordsPerLine=x;options = options with {maxWordsPerLine=x};UpdateDocument();})
                         Adornment=Adornment.End AdornmentIcon=@Icons.Material.Outlined.Calculate/>
-                    @*<MudCheckBox Label="Allow invalid characters"/>*@
                 </MudExpansionPanel>
             </MudExpansionPanels>
 
+            @*Main text field*@
             <MudTextField @bind-Value=input Variant=Variant.Outlined Label="Input text" Lines="10" Immediate=true
                 HelperTextOnFocus=true HelperText="Valid characters: A-Z ĂÂĂȘȚ 0-9 +-*- .?!"/>
 
             <div class="d-flex justify-center">
                 <MudButton Color=Color.Secondary Variant=Variant.Filled StartIcon=@Icons.Filled.Translate
-                    Disabled=@(input==oldInput) OnClick=UpdateDocument>Translate</MudButton>
+                    Disabled=@(input==oldInput || input == "") OnClick=UpdateDocument>Translate</MudButton>
             </div>
             
         </MudItem>
@@ -79,9 +69,6 @@
     string input = "This is some text written in StarGlyph", oldInput="";
     SvgDocument? document;
     string? documentContent;
-
-    //float zoom = 100;
-    //const float minZoom = 12.5f, maxZoom = 800f;
 
     MudChip? selectedStyle;
     int maxLineLength = 6;
