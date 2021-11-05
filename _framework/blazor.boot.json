@@ -9,7 +9,7 @@
     "assembly": {
       "BlazorDownloadFile.dll": "sha256-OVnUak16Imn+eibiXAW7etkhIgF+QdC++RYnVCmvu+M=",
       "Fizzler.dll": "sha256-EednvL7mFvXHl+7GDm52eJ4fIzdoYrK08j6F+igeOco=",
-      "GHPage.dll": "sha256-gU3Mdm60VqILVH8Jm\/J3n6Q3dR4YsA9sPUEWMJPJNfA=",
+      "GHPage.dll": "sha256-elQYrsaK5i2KTECz3TgN3GmjZeYPT0CV2GIkwygP2Ig=",
       "Microsoft.AspNetCore.Components.dll": "sha256-kqVTBuY729jMXFeftyG1DTRpgTWDOk87OK4pd7A5eIA=",
       "Microsoft.AspNetCore.Components.Forms.dll": "sha256-1CA0aXdQlh7jdA84c8deq61NEwru+XInPg9aFy9N6y4=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-ltv9vM2IBAsnhj3gXAWx5ZGsqu5YmRV9eoZmJytK\/Js=",
@@ -29,7 +29,7 @@
       "MudBlazor.dll": "sha256-x9BmKPbuHDJmwWsSIgWLryYOZWQQI8ccdr7xyg85JFI=",
       "netstandard.dll": "sha256-ZSiRqmH7Ao28yNrIHvW7VVdCrb0ZwIBQ9X2nbxEyXg0=",
       "runtime.osx.10.10-x64.CoreCompat.System.Drawing.dll": "sha256-DPJ3CSXDNA\/BavVEpjgucHiEabqkgR\/0O5zx05fuTMg=",
-      "StarGlyph.dll": "sha256-F7zFRM4kkaoFecnGkhbMV+6DsrEHXEzpHibDdjsYNfI=",
+      "StarGlyph.dll": "sha256-e6frGNre7cDMVczB9f3WNYiRl+eoviCkE16D+n\/wyjM=",
       "Svg.dll": "sha256-EN3dPpvKT1yMWQvZmzZLxJxKtHR3ed7yMS8zJt02INA=",
       "System.Collections.Concurrent.dll": "sha256-4uZYShEIpnNgUP6MYqCnE1OXtvOfolZJ69Jyd3gJUzE=",
       "System.Collections.dll": "sha256-MMggu\/tqSansobAH9Fk1xJRGeWI7t4KlfblsOETh9is=",
